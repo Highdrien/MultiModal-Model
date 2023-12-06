@@ -1,3 +1,6 @@
 # Projet SAM
 
-data (je crois): https://journals.openedition.org/tipa/5773
+Informations:
+- data: attendre les infos
+- deadline: ~fin janvier
+- rapport: parler de notre procédure, nos diffucultées. Ne pas faire de de state of the arts
