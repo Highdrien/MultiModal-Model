@@ -25,7 +25,10 @@ def transcribe_audio(audio_path, output_dir, segment_duration,beam_size=3):
     model = WhisperModel(model_size, device="cuda", compute_type="float16") #load the whisper model
     print("Model loaded")
     if not os.path.exists(output_dir): # Create the output directory if it doesn't exist
+        print("Creating output directory")
         os.makedirs(output_dir)
+    else:
+        print("Output directory already exists")
 
     audio, sample_rate = sf.read(audio_path) # Load the audio file
     total_duration = len(audio) / sample_rate * 1000  # Convert to milliseconds
@@ -65,8 +68,8 @@ def transcribe_audio(audio_path, output_dir, segment_duration,beam_size=3):
 
 if __name__ == "__main__":
     
-    audio_path = "C:/Users/Yanis/Downloads/test_2.wav" # The path to the audio file
-    output_directory = "C:/Users/Yanis/Downloads/transcription_output" # The directory where the transcribed segments and the final transcription will be saved (will be created if it doesn't exist)
+    audio_path = "debat_pres.wav" # The path to the audio file
+    output_directory = "transcription_output" # The directory where the transcribed segments and the final transcription will be saved (will be created if it doesn't exist)
     segment_duration = 30000  # The duration of each segment in milliseconds
     beam_size = 3 # The beam size used by the model (if too high, the model will run out of memory)
 
