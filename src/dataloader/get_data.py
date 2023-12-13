@@ -23,8 +23,8 @@ def get_frame(info: pd.DataFrame,
               useless_info_number: Optional[int]=5
               ) -> torch.Tensor:
     """
-    get the last `video_size` frame
-    output shape: (video_size, 709)
+    get the last <video_size> frame
+    output shape: (<video_size>, 709)
     """
     filepath = info[f'frame_path_{speaker}']
     frame = info[f'frame_index_{speaker}']
