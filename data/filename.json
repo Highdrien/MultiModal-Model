@@ -1,0 +1,5 @@
+{
+"train": ["LJ_JL", "AA_OR", "PR_EM", "MC_MRH", "ER_AG", "CM_MCC", "FB_CB", "JDS_LS", "PO_MH", "ML_HE", "BE_CR", "AS_EP", "NL_PG", "AW_CG", "MA_PC"],
+"val": ["JS_CL", "MD_AD", "JA_EA", "RPA_BN", "LP_MA"],
+"test": ["LS_NA", "FS_MG", "AC_MZ", "LE_LB", "LB_MA"]
+}
