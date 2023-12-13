@@ -5,6 +5,7 @@ from icecream import ic
 from easydict import EasyDict
 from typing import List, Tuple, Dict
 
+from time import time
 import torch
 from torch import Tensor
 from torch.nn.functional import one_hot
@@ -46,19 +47,30 @@ class DataGenerator(Dataset):
         video: Tensor de shape (2 * video_size, 709)
         label: Tensor de shape (2)  # one hot encoding
         """
+        start_time = time()
         line = self.df.loc[index]
         label = torch.tensor(int(line['label']))
         label = one_hot(label, num_classes=2)
         text, audio, video = None, None, None
 
         if self.load['text']:
+            start_text = time()
             text = get_data.get_text(info=line, sequence_size=self.sequence_size)
+            end_text = time()
 
         if self.load['video']:
+            start_video = time()
             s0 = get_data.get_frame(info=line, video_size=self.video_size, speaker=0)
             s1 = get_data.get_frame(info=line, video_size=self.video_size, speaker=1)
 
             video = torch.concat([s0, s1], dim=0)
+            end_video = time()
+        
+        end_time = time()
+        
+        print(f'load text time: {end_text - start_text}')
+        print(f'load video time: {end_video - start_video}')
+        print(f"all time: {end_time - start_time}")
         
         return text, audio, video, label
         

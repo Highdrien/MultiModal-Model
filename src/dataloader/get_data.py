@@ -8,11 +8,12 @@ def get_text(info: pd.DataFrame,
              ) -> List[str]:
     filepath = info['text_filepath']
     ipu = info['ipu_id']
-    df = pd.read_csv(filepath)
 
-    index_ipu_6 = df[df['ipu_id'] == ipu].index[0]
-
-    text = ' '.join(df.loc[index_ipu_6 - 5:index_ipu_6 - 1, 'text'].astype(str))
+    df = pd.read_csv(filepath,
+                     skiprows=range(1, ipu - 5 + 2),
+                     nrows=5)
+    
+    text = df['text'].str.cat(sep=' ')
     text = text.split(' ')[-sequence_size:]
     return text
 
@@ -28,10 +29,13 @@ def get_frame(info: pd.DataFrame,
     """
     filepath = info[f'frame_path_{speaker}']
     frame = info[f'frame_index_{speaker}']
-    df = pd.read_csv(filepath)
-    frames = []
-    for _ in range(frame - video_size + 1, frame + 1):
-        frames.append(df.iloc[frame].tolist()[useless_info_number:])
-    
-    return torch.tensor(frames, dtype=torch.float32)
+    df = pd.read_csv(filepath,
+                     skiprows=range(1, frame - video_size + 1),
+                     nrows=video_size)
+
+    colonnes_a_inclure = df.columns[useless_info_number:]
+    frames = df[colonnes_a_inclure].astype('float32').to_numpy()
+    frames = torch.tensor(frames)
+
+    return frames
 
