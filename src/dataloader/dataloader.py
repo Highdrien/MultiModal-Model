@@ -8,7 +8,7 @@ from torch import Tensor
 from torch.nn.functional import one_hot
 from torch.utils.data import Dataset, DataLoader
 
-import dataloader.get_data as get_data
+from dataloader import get_data
 
 
 class DataGenerator(Dataset):
@@ -63,7 +63,8 @@ class DataGenerator(Dataset):
             s0 = get_data.get_frame(info=line, video_size=self.video_size, speaker=0)
             s1 = get_data.get_frame(info=line, video_size=self.video_size, speaker=1)
 
-            video = torch.concat([s0, s1], dim=0)
+            # video = torch.concat([s0, s1], dim=0)
+            video = torch.stack([s0, s1], dim=len(s0.shape))
         
         return text, audio, video, label
         
