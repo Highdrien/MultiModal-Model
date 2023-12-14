@@ -78,10 +78,9 @@ if __name__ == "__main__":
                                  final_hidden_size=100, num_classes=2)
 
     # Define the inputs
-    audio_array =torch.rand((16,5,10))    # Example shape, adjust based on your actual data
-    wav2vec2_input_ids = torch.rand((16,1000))  # ATTENTION: pour une taille de 100 ça marche pas !!! COMPRENDRE POURQUOI
-    print("wav2vec2_input_ids shape:",wav2vec2_input_ids.shape)
-    bert_input_ids = torch.randint(0, 10, (16, 12))  # Example shape, adjust based on your actual data
+    audio_array =torch.rand((16,5,10)) # Shape: (batch_size, nb_frames, nb_features_per_frame)
+    wav2vec2_input_ids = torch.rand((16,1000)) #Shape: (batch_size, nb_frames)
+    bert_input_ids = torch.randint(0, 10, (16, 12))  #Shape: (batch_size, nb_words)
 
     # Forward pass
     logits = model(audio_array, wav2vec2_input_ids, bert_input_ids)
