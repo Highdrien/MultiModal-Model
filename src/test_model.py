@@ -24,8 +24,8 @@ def test_bert():
 
 
 def test_lstm():
-    batch_size = 16
-    num_frames = 20
+    batch_size = 32
+    num_frames = 10
     num_features = 709
 
     model = LSTMClassifier(num_features=num_features,
@@ -83,9 +83,9 @@ def test_multimodal():
     # logits = model(video_features_array, wav2vec2_input_ids, bert_input_ids)
     # print("output shape:",logits.shape)   
     # print("output:",logits)
-    batch_size = 16
-    sequence_size = 20
-    num_frames = 20
+    batch_size = 32
+    sequence_size = 10
+    num_frames = 10
     num_features = 709
     audio_length = 1000
 
@@ -114,7 +114,7 @@ def test_multimodal():
 
 
 if __name__ == '__main__':
-    # test_lstm()
+    #test_lstm()
     # test_bert()
     # test_wave2vec()
     test_multimodal()

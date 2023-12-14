@@ -5,18 +5,32 @@ from torch.utils.data import DataLoader
 
 from dataloader.dataloader import DataGenerator, create_dataloader
 from model.multimodal import MultimodalClassifier
+from model.bert import BertClassifier
+from model.lstm import LSTMClassifier
+from model.wave2vec import Wav2Vec2Classifier
+
+# Hyperparameters
+learning_rate = 0.001
+batch_size = 32
+epochs = 5
+num_features = 709
+hidden_size = 768
+final_hidden_size = 100
+
+
 
 def initialize_model():
-    model = MultimodalClassifier(
-        lstm_input_size=10,
-        lstm_hidden_size=100,
-        wav2vec2_pretrained_model='facebook/wav2vec2-base-960h',
-        wav2vec2_hidden_size=1024,
-        bert_pretrained_model='camembert-base',
-        bert_hidden_size=768,
-        final_hidden_size=100,
-        num_classes=2
-    )
+    """
+    Initializes a multimodal classifier model.
+
+    Returns:
+        model (MultimodalClassifier): The initialized multimodal classifier model.
+    """
+    model1 = BertClassifier(hidden_size=hidden_size, num_classes=2, last_layer=False)
+    model2 = LSTMClassifier(num_features=10, hidden_size=100, num_classes=2, last_layer=False)
+    model3 = Wav2Vec2Classifier(pretrained_model_name="facebook/wav2vec2-large-960h", last_layer=False)
+
+    model = MultimodalClassifier(bert_model=model1, lstm_model=model2, wav_model=model3, final_hidden_size=final_hidden_size, num_classes=2)
     return model
 
 def load_data_generator(mode='train'):
@@ -25,9 +39,9 @@ def load_data_generator(mode='train'):
         mode=mode,
         data_path='data',
         load=LOAD,
-        sequence_size=10,
-        audio_size=1,
-        video_size=10
+        sequence_size=10, #represent number of words in a sentence
+        audio_size=1000, #represent audio length
+        video_size=5 #represent number of frames
     )
     return generator
 
@@ -42,7 +56,7 @@ def train(model, train_dataloader, optimizer, epochs=5):
             # Assuming label is a tensor of class indices
             optimizer.zero_grad()
             #convert audio to float32
-            predictions = model(text, audio, video)
+            predictions = model.forward(text, audio, video)
             loss = calculate_loss(predictions, label)
             loss.backward()
             optimizer.step()
@@ -65,9 +79,9 @@ def main():
 
     #print shape of one element of train_dataloader
     text, audio, video, label = next(iter(train_dataloader))
-    print('text shape:', text.shape)
-    print('audio shape:', audio.shape)
-    print('video shape:', video.shape)
+    print('text shape:', text.shape) #shape: (batch_size, sequence_size)
+    print('audio shape:', audio.shape) #shape: (batch_size, audio_length)
+    print('video shape:', video.shape) #shape: (batch_size, num_frames, num_features)
     print('label shape:', label.shape)
 
     #print dtype
