@@ -3,7 +3,7 @@ import torch.nn as nn
 from transformers import BertModel
 # from transformers import BertModel, BertForSequenceClassification, CamembertForSequenceClassification
 
-from typing import Optional
+from typing import Optional, Any
 
 from model.basemodel import BaseModel
 
@@ -16,11 +16,8 @@ class BertClassifier(BaseModel):
                  last_layer: Optional[bool]=True
                  ) -> None:
         super(BertClassifier, self).__init__(last_layer=last_layer)
-        # self.bert = #CamembertForSequenceClassification.from_pretrained(
-        #     pretrained_model_name, output_hidden_states=False
-        # )  # Load the pre-trained BERT model # No need to specify the input shape
+
         self.bert=BertModel.from_pretrained(pretrained_model_name, output_hidden_states=True)
-        
         for param in self.bert.parameters():
             param.requires_grad = False
 
@@ -29,10 +26,12 @@ class BertClassifier(BaseModel):
         self.last_linear = nn.Linear(in_features=hidden_size, out_features=num_classes)
         self.relu = nn.ReLU()
 
-    def forward(self, input_ids: torch.Tensor, attention_mask = None):
-        #return result
+    def forward(self,
+                input_ids: torch.Tensor,
+                attention_mask: Optional[Any]=None
+                ) -> torch.Tensor:
         outputs = self.bert(input_ids, attention_mask=attention_mask)
-        pooled_output = outputs.last_hidden_state[:,0,:] #comprendre ce que ça fait
+        pooled_output = outputs.last_hidden_state[:,0,:]
         print("shape of pooled_output:",pooled_output.shape)
         pooled_output = self.dropout(pooled_output)
         logits = self.fc(pooled_output)

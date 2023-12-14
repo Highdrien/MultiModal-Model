@@ -85,7 +85,7 @@ def test_multimodal():
 
 
 if __name__ == '__main__':
-    test_multimodal()
     test_lstm()
     test_bert()
     test_wave2vec()
+    test_multimodal()
