@@ -8,11 +8,11 @@ from model.multimodal import MultimodalClassifier
 
 def initialize_model():
     model = MultimodalClassifier(
-        lstm_input_size=100,
+        lstm_input_size=10,
         lstm_hidden_size=100,
         wav2vec2_pretrained_model='facebook/wav2vec2-base-960h',
         wav2vec2_hidden_size=1024,
-        bert_pretrained_model='bert-base-uncased',
+        bert_pretrained_model='camembert-base',
         bert_hidden_size=768,
         final_hidden_size=100,
         num_classes=2
