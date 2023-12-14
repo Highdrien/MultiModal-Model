@@ -19,12 +19,12 @@ class MultimodalClassifier(nn.Module):
         num_classes (int): The number of classes for the final classification layer.
     """
 
-    def __init__(self, lstm_input_size, lstm_hidden_size, lstm_num_classes,
+    def __init__(self, lstm_input_size, lstm_hidden_size,
                  wav2vec2_pretrained_model,wav2vec2_hidden_size, bert_pretrained_model, bert_hidden_size, final_hidden_size, num_classes):
         super(MultimodalClassifier, self).__init__()
 
         # Define individual encoders
-        self.lstm_encoder = LSTMClassifier(lstm_input_size, lstm_hidden_size, lstm_num_classes)
+        self.lstm_encoder = LSTMClassifier(lstm_input_size, lstm_hidden_size)
         self.wav2vec2_encoder = Wav2Vec2Classifier(wav2vec2_pretrained_model)
         self.bert_encoder = BertClassifier(bert_pretrained_model, bert_hidden_size, num_classes)
 
@@ -72,7 +72,7 @@ class MultimodalClassifier(nn.Module):
 
 if __name__ == "__main__":
     # Define the model
-    model = MultimodalClassifier(lstm_input_size=10, lstm_hidden_size=100, lstm_num_classes=2,wav2vec2_hidden_size=1024,
+    model = MultimodalClassifier(lstm_input_size=10, lstm_hidden_size=100,wav2vec2_hidden_size=1024,
                                  wav2vec2_pretrained_model="facebook/wav2vec2-large-960h",
                                  bert_pretrained_model="bert-base-uncased", bert_hidden_size=768,
                                  final_hidden_size=100, num_classes=2)

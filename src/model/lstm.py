@@ -3,7 +3,7 @@ import torch.nn as nn
 from numpy import prod
 
 class LSTMClassifier(nn.Module):
-    def __init__(self, input_size: int, hidden_size: int, num_classes: int):
+    def __init__(self, input_size: int, hidden_size: int):
         super(LSTMClassifier, self).__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, batch_first=True)
         self.dropout = nn.Dropout(0.1)
@@ -19,7 +19,7 @@ class LSTMClassifier(nn.Module):
 
 if __name__ == "__main__":
     lstm_hidden_size = 100  # You can adjust the hidden size as needed
-    model = LSTMClassifier(input_size=10, hidden_size=lstm_hidden_size, num_classes=2)
+    model = LSTMClassifier(input_size=10, hidden_size=lstm_hidden_size)
 
 
     #make a batch of 16 sequences of 5 frames with 10 landmarks in each frame
