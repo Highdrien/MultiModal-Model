@@ -35,7 +35,7 @@ class MultimodalClassifier(nn.Module):
         # Final classification layer
         self.fc = nn.Linear(final_hidden_size, num_classes)
 
-    def forward(self, audio_array, wav2vec2_input_ids, bert_input_ids, attention_mask=None):
+    def forward(self, landmarks_array, wav2vec2_input_ids, bert_input_ids, attention_mask=None):
         """
         Forward pass of the multimodal classifier.
 
@@ -49,12 +49,16 @@ class MultimodalClassifier(nn.Module):
             torch.Tensor: The logits for the classification task.
         """
         # Forward pass through individual encoders
-        lstm_output = self.lstm_encoder(audio_array)
-        wav2vec2_output = self.wav2vec2_encoder(wav2vec2_input_ids)
-        bert_output = self.bert_encoder(bert_input_ids, attention_mask)
+        lstm_output = self.lstm_encoder.forward(landmarks_array)
+        wav2vec2_output = self.wav2vec2_encoder.forward(wav2vec2_input_ids)
+        bert_output = self.bert_encoder.forward(bert_input_ids, attention_mask)
+
+        print("shape of lstm_output:",lstm_output.shape) #[16, 100] normalement
+        print("shape of wav2vec2_output:",wav2vec2_output.shape) #[16,2, 1024] comprends pas pourquoi 2
+        print("shape of bert_output:",bert_output.shape) #[16, 768]
 
         # Concatenate the outputs of individual encoders
-        concatenated_output = torch.cat((lstm_output, wav2vec2_output, bert_output), dim=1)
+        concatenated_output = torch.cat((lstm_output, wav2vec2_output[:,0,:], bert_output), dim=1)
         print("shape of concatenated_output:",concatenated_output.shape)
 
         # Apply fusion layer
@@ -75,7 +79,8 @@ if __name__ == "__main__":
 
     # Define the inputs
     audio_array =torch.rand((16,5,10))    # Example shape, adjust based on your actual data
-    wav2vec2_input_ids =torch.rand((16,100))  # Example shape, adjust based on your actual data
+    wav2vec2_input_ids = torch.rand((16,1000))  # ATTENTION: pour une taille de 100 ça marche pas !!! COMPRENDRE POURQUOI
+    print("wav2vec2_input_ids shape:",wav2vec2_input_ids.shape)
     bert_input_ids = torch.randint(0, 10, (16, 12))  # Example shape, adjust based on your actual data
 
     # Forward pass

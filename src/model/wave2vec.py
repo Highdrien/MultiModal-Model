@@ -16,6 +16,13 @@ class Wav2Vec2Classifier(nn.Module):
 
     def forward(self, audio_array):
         input_values = self.processor(audio_array, return_tensors="pt", padding="longest").input_values
+        print("input_values shape:",input_values.shape)
+
+        #si la prmeière dimension est 1, on squeeze
+        if input_values.shape[0]==1:
+            input_values=torch.squeeze(input_values)
+        
+        print('squeeze input_values shape:',input_values.shape)
         logits = self.model(input_values)[0]
         return logits
 
@@ -34,19 +41,12 @@ if __name__ == '__main__':
     channel1=torch.tensor(channel1)
     channel2=torch.tensor(channel2)
 
-    #forward
-    x1 = model.forward(channel1)
-    x2 = model.forward(channel2)
+    #print channel shape
+    print("Channel 1 shape:", channel1.shape)
 
-    print("Output shape 1:", x1.shape)
-    print("Output shape 2:", x2.shape)
-
-
-
-    #x = torch.rand((1, 1000))  # Example shape, adjust based on your actual data
-    #x=x.squeeze()
-
-    print("Input shape:", x.shape)
+    #make a batch with the two channels
+    x = torch.stack([channel1] * 16)
+    print("Batch shape:", x.shape)
 
     y = model.forward(x)
 
