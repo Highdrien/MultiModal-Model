@@ -41,6 +41,7 @@ def train(model, train_dataloader, optimizer, epochs=5):
         for text, audio, video, label in train_dataloader:
             # Assuming label is a tensor of class indices
             optimizer.zero_grad()
+            #convert audio to float32
             predictions = model(text, audio, video)
             loss = calculate_loss(predictions, label)
             loss.backward()
@@ -59,7 +60,8 @@ def main():
 
     # Create data loaders
     train_dataloader = DataLoader(load_data_generator(mode='train'), batch_size=batch_size, shuffle=True)
-    test_dataloader = create_dataloader(mode='test')
+    LOAD = {'audio': False, 'text': True, 'video': True}
+    test_dataloader = create_dataloader(mode='test', load=LOAD)
 
     #print shape of one element of train_dataloader
     text, audio, video, label = next(iter(train_dataloader))
@@ -67,6 +69,12 @@ def main():
     print('audio shape:', audio.shape)
     print('video shape:', video.shape)
     print('label shape:', label.shape)
+
+    #print dtype
+    print("dtype audio:", audio.dtype)
+    print("dtype text:", text.dtype)
+    print("dtype video:", video.dtype)
+    print("dtype label:", label.dtype)
 
     # Define optimizer
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)

@@ -1,8 +1,8 @@
 import torch.nn as nn
 import torch
-from bert import BertClassifier
-from lstm import LSTMClassifier
-from wave2vec import Wav2Vec2Classifier
+from model.bert import BertClassifier
+from model.lstm import LSTMClassifier
+from model.wave2vec import Wav2Vec2Classifier
 
 ## ce modèle est un modèle de classification multimodale qui combine les sorties de 3 modèles différents (LSTM, Wav2Vec2, BERT)
 ## On donne au modèle en entrée: [landmarks_array, wav2vec2_input_ids, bert_input_ids]
@@ -83,6 +83,7 @@ if __name__ == "__main__":
 
     # Define the inputs
     video_features_array =torch.rand((16,5,10)) # Shape: (batch_size, nb_frames, nb_features_per_frame)
+    print("dtype:",video_features_array.dtype)
     wav2vec2_input_ids = torch.rand((16,1000)) #Shape: (batch_size, nb_frames)
     bert_input_ids = torch.randint(0, 10, (16, 12))  #Shape: (batch_size, nb_words)
 
