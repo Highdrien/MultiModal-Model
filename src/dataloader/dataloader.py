@@ -69,7 +69,7 @@ class DataGenerator(Dataset):
 def create_dataloader(mode: str, load: Dict[str, bool]) -> DataLoader:
     generator = DataGenerator(mode=mode,
                               data_path='data',
-                              load=LOAD, 
+                              load=load, 
                               sequence_size=10,
                               audio_size=1,
                               video_size=10)
