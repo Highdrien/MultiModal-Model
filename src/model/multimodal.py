@@ -4,6 +4,10 @@ from bert import BertClassifier
 from lstm import LSTMClassifier
 from wave2vec import Wav2Vec2Classifier
 
+## ce modèle est un modèle de classification multimodale qui combine les sorties de 3 modèles différents (LSTM, Wav2Vec2, BERT)
+## On donne au modèle en entrée: [landmarks_array, wav2vec2_input_ids, bert_input_ids]
+
+
 class MultimodalClassifier(nn.Module):
     """
     A multimodal classifier that combines audio, text, and visual information for classification tasks.
@@ -78,11 +82,11 @@ if __name__ == "__main__":
                                  final_hidden_size=100, num_classes=2)
 
     # Define the inputs
-    audio_array =torch.rand((16,5,10)) # Shape: (batch_size, nb_frames, nb_features_per_frame)
+    video_features_array =torch.rand((16,5,10)) # Shape: (batch_size, nb_frames, nb_features_per_frame)
     wav2vec2_input_ids = torch.rand((16,1000)) #Shape: (batch_size, nb_frames)
     bert_input_ids = torch.randint(0, 10, (16, 12))  #Shape: (batch_size, nb_words)
 
     # Forward pass
-    logits = model(audio_array, wav2vec2_input_ids, bert_input_ids)
+    logits = model(video_features_array, wav2vec2_input_ids, bert_input_ids)
     print("output shape:",logits.shape)   
     print("output:",logits)
