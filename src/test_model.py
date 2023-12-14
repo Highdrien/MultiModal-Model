@@ -9,33 +9,35 @@ from model.multimodal import MultimodalClassifier
 
 
 def test_bert():
-    model = BertClassifier("camembert-base", 768, 2)
+    batch_size = 16
+    hidden_size = 768
+    sequence_size = 20
 
-    print(model)
-    print(model.get_number_parameters())
+    model = BertClassifier(hidden_size=hidden_size,
+                           num_classes=2)
 
-    x = torch.randint(0, 10, (16, 12))  # Represents a sentence of 12 tokens, batch size of 16, max 10 tokens per sentence
+    print('learning parameters:', model.get_number_parameters())
+    x = torch.randint(0, 10, (batch_size, sequence_size))
     print("shape entrée:", x.shape)
-
     y = model(x)
-
     print("shape sortie", y.shape)
-    print("sortie:", y)
 
 
 def test_lstm():
-    lstm_hidden_size = 100  # You can adjust the hidden size as needed
-    model = LSTMClassifier(input_size=10, hidden_size=lstm_hidden_size)
+    batch_size = 16
+    num_frames = 20
+    num_features = 709
 
-
-    #make a batch of 16 sequences of 5 frames with 10 landmarks in each frame
-    x = torch.rand((16, 5, 10))
+    model = LSTMClassifier(num_features=num_features,
+                           hidden_size=100,
+                           num_classes=2,
+                           last_layer=False)
+    
+    print('learning parameters:', model.get_number_parameters())
+    x = torch.rand((batch_size, num_frames, num_features))
     print("shape entrée:", x.shape)
-
-    y = model(x)
-
+    y = model.forward(x)
     print("shape sortie", y.shape) #should be (16,100)
-    print("sortie:", y)
 
 
 def test_wave2vec():
@@ -87,5 +89,5 @@ def test_multimodal():
 if __name__ == '__main__':
     test_lstm()
     test_bert()
-    test_wave2vec()
-    test_multimodal()
+    # test_wave2vec()
+    # test_multimodal()

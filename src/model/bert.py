@@ -10,9 +10,9 @@ from model.basemodel import BaseModel
 
 class BertClassifier(BaseModel):
     def __init__(self,
-                 pretrained_model_name: str,
                  hidden_size: int,
                  num_classes: int,
+                 pretrained_model_name: Optional[str]='camembert-base', 
                  last_layer: Optional[bool]=True
                  ) -> None:
         super(BertClassifier, self).__init__(last_layer=last_layer)
@@ -21,18 +21,21 @@ class BertClassifier(BaseModel):
         for param in self.bert.parameters():
             param.requires_grad = False
 
-        self.dropout = nn.Dropout(0.1)  # You can adjust the dropout rate
+        self.dropout = nn.Dropout(0.1)
         self.fc = nn.Linear(hidden_size, hidden_size)
         self.last_linear = nn.Linear(in_features=hidden_size, out_features=num_classes)
         self.relu = nn.ReLU()
 
     def forward(self,
-                input_ids: torch.Tensor,
+                x: torch.Tensor,
                 attention_mask: Optional[Any]=None
                 ) -> torch.Tensor:
-        outputs = self.bert(input_ids, attention_mask=attention_mask)
+        """
+        x shape: (batch_size, sequence_size), dtype: torch.int64
+        output_shape: (batch_size, num_classes) or (batch_size, hidden_size)
+        """
+        outputs = self.bert(x, attention_mask=attention_mask)
         pooled_output = outputs.last_hidden_state[:,0,:]
-        print("shape of pooled_output:",pooled_output.shape)
         pooled_output = self.dropout(pooled_output)
         logits = self.fc(pooled_output)
 
@@ -41,18 +44,3 @@ class BertClassifier(BaseModel):
             logits = self.last_linear(x)
         
         return logits
-
-
-if __name__ == "__main__":
-    model = BertClassifier("camembert-base", 768, 2)
-
-    print(model)
-    print(model.get_number_parameters())
-
-    x = torch.randint(0, 10, (16, 12))  # Represents a sentence of 12 tokens, batch size of 16, max 10 tokens per sentence
-    print("shape entrée:", x.shape)
-
-    y = model(x)
-
-    print("shape sortie", y.shape)
-    print("sortie:", y)
