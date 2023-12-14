@@ -15,7 +15,7 @@ class BertClassifier(BaseModel):
                  pretrained_model_name: Optional[str]='camembert-base', 
                  last_layer: Optional[bool]=True
                  ) -> None:
-        super(BertClassifier, self).__init__(last_layer=last_layer)
+        super(BertClassifier, self).__init__(hidden_size, last_layer, num_classes)
 
         self.bert=BertModel.from_pretrained(pretrained_model_name, output_hidden_states=True)
         for param in self.bert.parameters():
@@ -31,8 +31,8 @@ class BertClassifier(BaseModel):
                 attention_mask: Optional[Any]=None
                 ) -> torch.Tensor:
         """
-        x shape: (batch_size, sequence_size), dtype: torch.int64
-        output_shape: (batch_size, num_classes) or (batch_size, hidden_size)
+        x shape: (B, sequence_size),                dtype: torch.int64
+        output_shape: (B, C) or (B, hidden_size)    dtype: torch.float32
         """
         outputs = self.bert(x, attention_mask=attention_mask)
         pooled_output = outputs.last_hidden_state[:,0,:]
@@ -40,7 +40,6 @@ class BertClassifier(BaseModel):
         logits = self.fc(pooled_output)
 
         if self.last_layer:
-            x = self.relu(logits)
-            logits = self.last_linear(x)
+            logits = self.forward_last_layer(x=logits)
         
         return logits

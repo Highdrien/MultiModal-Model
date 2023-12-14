@@ -1,54 +1,42 @@
-from torch import Tensor
-import torch.nn as nn
 from transformers import Wav2Vec2Processor, Wav2Vec2Model
-from typing import List, Union
+from typing import Optional
 import torch
-from icecream import ic
-import numpy as np
-import soundfile as sf
-import numpy as np
+import torch.nn as nn
 
-class Wav2Vec2Classifier(nn.Module):
-    def __init__(self, pretrained_model_name):
-        super(Wav2Vec2Classifier, self).__init__()
+from model.basemodel import BaseModel
+
+
+class Wav2Vec2Classifier(BaseModel):
+    def __init__(self, 
+                 pretrained_model_name: Optional[str]='facebook/wav2vec2-large-960h',
+                 last_layer: Optional[bool]=True,
+                 num_classes: Optional[bool]=2,
+                 ) -> None:
+        hidden_size = 2 * 1024
+        super(Wav2Vec2Classifier, self).__init__(hidden_size, last_layer, num_classes)
         self.processor = Wav2Vec2Processor.from_pretrained(pretrained_model_name)
         self.model = Wav2Vec2Model.from_pretrained(pretrained_model_name)
 
-    def forward(self, audio_array):
-        input_values = self.processor(audio_array, return_tensors="pt", padding="longest").input_values
-        print("input_values shape:",input_values.shape)
+        self.relu = nn.ReLU()
+        self.last_linear = nn.Linear(in_features=hidden_size, out_features=num_classes)
 
-        #si la prmeière dimension est 1, on squeeze
+        for param in self.model.parameters():
+            param.requires_grad = False
+
+    def forward(self, audio: torch.Tensor) -> torch.Tensor:
+        """
+        audio shape:  (B, audio_length)         dtype: torch.float32
+        output shape: (B, 2, 1024) or (B, C)    dtype: torch.float32
+        """
+        input_values = self.processor(audio, return_tensors="pt", padding="longest").input_values
+
         if input_values.shape[0]==1:
             input_values=torch.squeeze(input_values)
         
-        print('squeeze input_values shape:',input_values.shape)
-        logits = self.model(input_values)[0]
-        return logits
+        x = self.model(input_values)[0]
+        x = x.view(x.shape[0], -1)
 
+        if self.last_layer:
+            x = self.forward_last_layer(x=x)
 
-if __name__ == '__main__':
-    model = Wav2Vec2Classifier("facebook/wav2vec2-large-960h")
-    PATH='debat_pres.wav'
-    #open audio file
-    # Read the .wav file
-    data, samplerate = sf.read(PATH)
-    print("Audio array shape:", np.shape(data))
-    #récupérer les channels séparément
-    channel1 = data[:1000,0] #on prend que les 1000 premiers échantillons
-    channel2 = data[:1000,1] #on prend que les 1000 premiers échantillons
-    #convertir en tensor
-    channel1=torch.tensor(channel1)
-    channel2=torch.tensor(channel2)
-
-    #print channel shape
-    print("Channel 1 shape:", channel1.shape)
-
-    #make a batch with the two channels
-    x = torch.stack([channel1] * 16)
-    print("Batch shape:", x.shape)
-
-    y = model.forward(x)
-
-    print("Output shape:", y.shape)
-    print("Output:", y) 
+        return x

@@ -9,9 +9,9 @@ class LSTMClassifier(BaseModel):
     def __init__(self, 
                  num_features: int,
                  hidden_size: int,
-                 num_classes: int,
+                 num_classes: Optional[int]=2,
                  last_layer: Optional[bool]=True) -> None:
-        super(LSTMClassifier, self).__init__(last_layer=last_layer)
+        super(LSTMClassifier, self).__init__(hidden_size, last_layer, num_classes)
         self.lstm = nn.LSTM(num_features, hidden_size, batch_first=True)
         self.dropout = nn.Dropout(0.1)
         self.last_linear = nn.Linear(in_features=hidden_size, out_features=num_classes)
@@ -19,8 +19,8 @@ class LSTMClassifier(BaseModel):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
-        input shape: (batch_size, num_frames, num_features)
-        output_shape: (batch_size, num_classes) or (batch_size, hidden_size)  
+        input shape:  (B, num_frames, num_features)     dtype: torch.float32
+        output_shape: (B, C) or (B, hidden_size)        dtype: torch.float32
         """
         output = self.lstm(x) #input of shape (batch_size,nb_frames, nb_features)
         # print("shape of output:",output[0].shape)
@@ -29,7 +29,6 @@ class LSTMClassifier(BaseModel):
         # print("shape of last_hidden_state:",last_hidden_state.shape)
 
         if self.last_layer:
-            x = self.relu(x)
-            x = self.last_linear(x)
+            x = self.forward_last_layer(x=x)
 
         return x
