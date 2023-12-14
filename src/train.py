@@ -34,7 +34,7 @@ def initialize_model():
     return model
 
 def load_data_generator(mode='train'):
-    LOAD = {'audio': False, 'text': True, 'video': True}
+    LOAD = {'audio': True, 'text': True, 'video': True}
     generator = DataGenerator(
         mode=mode,
         data_path='data',
@@ -74,7 +74,7 @@ def main():
 
     # Create data loaders
     train_dataloader = DataLoader(load_data_generator(mode='train'), batch_size=batch_size, shuffle=True)
-    LOAD = {'audio': False, 'text': True, 'video': True}
+    LOAD = {'audio': True, 'text': True, 'video': True}
     test_dataloader = create_dataloader(mode='test', load=LOAD)
 
     #print shape of one element of train_dataloader

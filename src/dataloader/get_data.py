@@ -47,8 +47,8 @@ def get_audio_sf(info: pd.DataFrame,
     audio, sampling_rate = sf.read(file=info['audio_filepath'],
                                   start=end_time - audio_length,
                                   stop=end_time)
-    print(sampling_rate)
+    #print(sampling_rate)
     audio = torch.tensor(audio).to(torch.float32)
-    print(audio.dtype)
+    #print(audio.dtype)
     return audio
 
