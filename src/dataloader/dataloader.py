@@ -8,7 +8,7 @@ from torch import Tensor
 from torch.nn.functional import one_hot
 from torch.utils.data import Dataset, DataLoader
 
-import get_data
+import dataloader.get_data as get_data
 
 
 class DataGenerator(Dataset):
