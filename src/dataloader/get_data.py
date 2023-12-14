@@ -1,4 +1,7 @@
 import pandas as pd
+import soundfile as sf
+from pydub import AudioSegment
+from time import time
 from typing import List, Optional
 
 import torch
@@ -35,4 +38,17 @@ def get_frame(info: pd.DataFrame,
     frames = torch.tensor(frames)
 
     return frames
+
+def get_audio_sf(info: pd.DataFrame,
+                 audio_length: int
+                 ) -> torch.Tensor:
+    """ audio length in ms """
+    end_time = int(info['stoptime'] * 1000)
+    audio, sampling_rate = sf.read(file=info['audio_filepath'],
+                                  start=end_time - audio_length,
+                                  stop=end_time)
+    print(sampling_rate)
+    audio = torch.tensor(audio).to(torch.float32)
+    print(audio.dtype)
+    return audio
 

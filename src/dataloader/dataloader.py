@@ -8,7 +8,7 @@ from torch import Tensor
 from torch.nn.functional import one_hot
 from torch.utils.data import Dataset, DataLoader
 
-import dataloader.get_data as get_data
+import get_data as get_data
 
 
 class DataGenerator(Dataset):
@@ -55,6 +55,9 @@ class DataGenerator(Dataset):
             text = get_data.get_text(info=line)
             text = self.tokenizer(text)['input_ids'][:self.sequence_size]
             text = torch.tensor(text)
+        
+        if self.load['audio']:
+            audio = get_data.get_audio_sf(info=line, audio_length=self.audio_size)
 
         if self.load['video']:
             s0 = get_data.get_frame(info=line, video_size=self.video_size, speaker=0)
@@ -83,26 +86,26 @@ def create_dataloader(mode: str, load: Dict[str, bool]) -> DataLoader:
 
 
 if __name__ == '__main__':
-    LOAD = {'audio': False, 'text': True, 'video': True}
+    LOAD = {'audio': True, 'text': True, 'video': True}
     generator = DataGenerator(mode='val',
                               data_path='data',
                               load=LOAD, 
                               sequence_size=10,
-                              audio_size=1,
+                              audio_size=100,
                               video_size=10)
     print('num data in generator:', len(generator))
     text, audio, video, label = generator.__getitem__(index=32)
     print('text shape:', text.shape)
-    print('audio:', audio)
+    print('audio shape:', audio.shape)
     print('video shape:', video.shape)
     print('label shape:', label.shape)
 
     # test dataloader
-    test_dataloader = create_dataloader(mode='test', load=LOAD)
-    text, audio, video, label = next(iter(test_dataloader))
-    print('text shape:', text.shape)
-    print('audio shape:', audio.shape)
-    print('video shape:', video.shape)
-    print('label shape:', label.shape)
+    # test_dataloader = create_dataloader(mode='test', load=LOAD)
+    # text, audio, video, label = next(iter(test_dataloader))
+    # print('text shape:', text.shape)
+    # print('audio shape:', audio.shape)
+    # print('video shape:', video.shape)
+    # print('label shape:', label.shape)
 
 

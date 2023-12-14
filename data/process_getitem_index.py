@@ -65,6 +65,16 @@ def process_index_video(file: str,
         output[f'frame_index_{n_speaker}'] = frame_index
 
 
+def process_audio(speakers: Tuple[str, str],
+                  output: Dict[str, list],
+                  data_path: Optional[str]='data'
+                  ) -> None:
+    file_name = f"{speakers[0]}_{speakers[1]}.wav"
+    filepath = os.path.join(data_path, 'audio', '2_channels', file_name)
+    output['audio_filepath'] = [filepath] * len(output['text_filepath'])
+
+
+
 
 def merge_all_files(list_dico: List[Dict[str, list]]) -> Dict[str, list]:
     big_dict = list_dico[0]
@@ -101,6 +111,7 @@ if __name__ == '__main__':
             print(file_name, speakers)
             output = process_text_index(file=file_name, data_path=data_path)
             process_index_video(file=file_name, speakers=speakers, text_output=output)
+            process_audio(speakers=speakers, output=output, data_path=data_path)
             dict_list.append(output)
         big_dict = merge_all_files(list_dico=dict_list)
         save_output(dico=big_dict, mode=mode)
