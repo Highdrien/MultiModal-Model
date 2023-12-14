@@ -12,15 +12,20 @@ from icecream import ic
 class BertClassifier(nn.Module):
     def __init__(self, pretrained_model_name: str, hidden_size: int, num_classes: int):
         super(BertClassifier, self).__init__()
-        self.bert = CamembertForSequenceClassification.from_pretrained(
-            pretrained_model_name, output_hidden_states=True
-        )  # Load the pre-trained BERT model # No need to specify the input shape
-        #self.dropout = nn.Dropout(0.1)  # You can adjust the dropout rate
-        #self.fc = nn.Linear(hidden_size, num_classes)
+        #self.bert = #CamembertForSequenceClassification.from_pretrained(
+            #pretrained_model_name, output_hidden_states=False
+        #)  # Load the pre-trained BERT model # No need to specify the input shape
+        self.bert=BertModel.from_pretrained(pretrained_model_name, output_hidden_states=True)
+        self.dropout = nn.Dropout(0.1)  # You can adjust the dropout rate
+        self.fc = nn.Linear(hidden_size, hidden_size)
 
     def forward(self, input_ids: Tensor, attention_mask = None):
         #return result
-        logits = self.bert(input_ids, attention_mask=attention_mask)[0]
+        outputs = self.bert(input_ids, attention_mask=attention_mask)
+        pooled_output = outputs.last_hidden_state[:,0,:] #comprendre ce que ça fait
+        print("shape of pooled_output:",pooled_output.shape)
+        pooled_output = self.dropout(pooled_output)
+        logits = self.fc(pooled_output)
         
         return logits
 
