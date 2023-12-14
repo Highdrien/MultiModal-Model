@@ -48,7 +48,7 @@ class DataGenerator(Dataset):
         """
         line = self.df.loc[index]
         label = torch.tensor(int(line['label']))
-        label = one_hot(label, num_classes=2)
+        label = one_hot(label, num_classes=2).to(torch.float32)
         text, audio, video = [torch.zeros(1)] * 3
 
         if self.load['text']:
