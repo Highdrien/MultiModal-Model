@@ -3,9 +3,7 @@ from typing import List, Optional
 
 import torch
 
-def get_text(info: pd.DataFrame,
-             sequence_size: int
-             ) -> List[str]:
+def get_text(info: pd.DataFrame) -> List[str]:
     filepath = info['text_filepath']
     ipu = info['ipu_id']
 
@@ -14,7 +12,6 @@ def get_text(info: pd.DataFrame,
                      nrows=5)
     
     text = df['text'].str.cat(sep=' ')
-    text = text.split(' ')[-sequence_size:]
     return text
 
 
