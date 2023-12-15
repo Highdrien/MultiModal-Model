@@ -1,0 +1,30 @@
+name: experiment
+
+task: text            # choose btw text, audio, video or all
+
+data:
+  path: data          # data path
+  sequence_size: 20   # num word in sequence
+  num_frames: 10      # num frames by speaker
+  audio_length: 1000  # num milisecondes by speaker
+  num_features: 709   # num landmars in the frames
+  num_classes: 2      # num classes
+
+model:
+  text:
+    pretrained_model_name: camembert-base
+    hidden_size: 100
+  
+  audio:
+    pretrained_model_name: facebook/wav2vec2-large-960h
+  
+  video:
+    hidden_size: 100
+  
+  all:
+    hidden_size: 100
+  
+learning:
+  learning_rate: 0.01
+  batch_size: 32
+  epochs: 5

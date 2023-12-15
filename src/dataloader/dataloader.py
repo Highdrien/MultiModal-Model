@@ -70,7 +70,9 @@ class DataGenerator(Dataset):
         
 
 
-def create_dataloader(mode: str, load: Dict[str, bool]) -> DataLoader:
+def create_dataloader(mode: str, config: dict) -> DataLoader:
+    load = dict(map(lambda x: (x, config.task in [x, 'all']), ['text', 'audio', 'video']))
+
     generator = DataGenerator(mode=mode,
                               data_path='data',
                               load=load, 
