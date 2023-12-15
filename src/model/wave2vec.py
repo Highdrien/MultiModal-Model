@@ -13,28 +13,32 @@ class Wav2Vec2Classifier(BaseModel):
                  num_classes: Optional[bool]=2,
                  ) -> None:
         hidden_size = 2 * 1024
-        super(Wav2Vec2Classifier, self).__init__(hidden_size, last_layer, num_classes)
+        super(Wav2Vec2Classifier, self).__init__(hidden_size * 2, last_layer, num_classes)
         self.processor = Wav2Vec2Processor.from_pretrained(pretrained_model_name)
         self.model = Wav2Vec2Model.from_pretrained(pretrained_model_name)
-
-        self.relu = nn.ReLU()
-        self.last_linear = nn.Linear(in_features=hidden_size, out_features=num_classes)
 
         for param in self.model.parameters():
             param.requires_grad = False
 
-    def forward(self, audio: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
-        audio shape:  (B, audio_length)         dtype: torch.float32
-        output shape: (B, 2, 1024) or (B, C)    dtype: torch.float32
+        audio shape:  (B, audio_length, 2)         dtype: torch.float32
+        output shape: (B, 4096) or (B, C)    dtype: torch.float32
         """
-        input_values = self.processor(audio, return_tensors="pt", padding="longest").input_values
+        x0, x1 = x[..., 0], x[..., 1]
+        x0 = self.processor(x0, return_tensors="pt", padding="longest", sampling_rate=16000).input_values
+        x1 = self.processor(x1, return_tensors="pt", padding="longest", sampling_rate=16000).input_values
 
-        if input_values.shape[0]==1:
-            input_values=torch.squeeze(input_values)
+        x0 = torch.squeeze(x0)
+        x1 = torch.squeeze(x1)
         
-        x = self.model(input_values)[0]
-        x = x.view(x.shape[0], -1)
+        x0 = self.model(x0)[0]
+        x0 = x0.view(x.shape[0], -1)
+
+        x1 = self.model(x1)[0]
+        x1 = x1.view(x.shape[0], -1)
+
+        x = torch.cat([x0, x1], dim=1)
 
         if self.last_layer:
             x = self.forward_last_layer(x=x)

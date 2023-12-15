@@ -8,7 +8,10 @@ from torch import Tensor
 from torch.nn.functional import one_hot
 from torch.utils.data import Dataset, DataLoader
 
-from dataloader import get_data
+try:
+    from dataloader import get_data
+except:
+    import get_data
 
 
 class DataGenerator(Dataset):
@@ -40,11 +43,13 @@ class DataGenerator(Dataset):
     
     def __getitem__(self, index: int) -> List[Tensor]:
         """ renvoie 4 tensors: text, audio, video et label
-        les 3 premiers peuvent valoir None si load[<type>]=False
+        les 3 premiers peuvent valoir torch.zeros(0) si load[<type>]=False
 
-        text: List[str]     # faire le tokenizer après
-        video: Tensor de shape (2 * video_size, 709)
-        label: Tensor de shape (2)  # one hot encoding
+        SHAPE AFTER BATCH
+        text  shape:    (batch_size, sequence size)
+        audio shape:    (batch_size, audio_length, 2)
+        video shape:    (batch_size, num_frames, num_features, 2)
+        label shape:    (batch_size, num_classes)
         """
         line = self.df.loc[index]
         label = torch.tensor(int(line['label']))
@@ -71,16 +76,19 @@ class DataGenerator(Dataset):
 
 
 def create_dataloader(mode: str, config: dict) -> DataLoader:
+    assert mode in ['train', 'val', 'test'], f"mode must be train, val or test but is '{mode}'"
+
     load = dict(map(lambda x: (x, config.task in [x, 'all']), ['text', 'audio', 'video']))
 
     generator = DataGenerator(mode=mode,
-                              data_path='data',
+                              data_path=config.data.path,
                               load=load, 
-                              sequence_size=10,
-                              audio_size=1,
-                              video_size=10)
+                              sequence_size=config.data.sequence_size,
+                              audio_size=config.data.audio_length,
+                              video_size=config.data.num_frames)
+       
     dataloader = DataLoader(generator,
-                            batch_size=16,
+                            batch_size=config.learning.batch_size,
                             shuffle=True,
                             drop_last=True)
     return dataloader
@@ -89,26 +97,18 @@ def create_dataloader(mode: str, config: dict) -> DataLoader:
 
 
 if __name__ == '__main__':
-    LOAD = {'audio': True, 'text': True, 'video': True}
-    generator = DataGenerator(mode='val',
-                              data_path='data',
-                              load=LOAD, 
-                              sequence_size=10,
-                              audio_size=100,
-                              video_size=10)
-    print('num data in generator:', len(generator))
-    text, audio, video, label = generator.__getitem__(index=32)
+    import yaml
+    from easydict import EasyDict
+    from icecream import ic
+
+    stream = open('config/config.yaml', 'r')
+    config = EasyDict(yaml.safe_load(stream))
+    config.task = 'all'
+    ic(config)
+
+    test_dataloader = create_dataloader(mode='test', config=config)
+    text, audio, video, label = next(iter(test_dataloader))
     print('text shape:', text.shape)
     print('audio shape:', audio.shape)
     print('video shape:', video.shape)
     print('label shape:', label.shape)
-
-    # test dataloader
-    # test_dataloader = create_dataloader(mode='test', load=LOAD)
-    # text, audio, video, label = next(iter(test_dataloader))
-    # print('text shape:', text.shape)
-    # print('audio shape:', audio.shape)
-    # print('video shape:', video.shape)
-    # print('label shape:', label.shape)
-
-

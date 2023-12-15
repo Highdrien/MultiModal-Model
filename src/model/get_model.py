@@ -1,7 +1,7 @@
 from easydict import EasyDict
 import torch.nn as nn
 
-from src.model import bert, lstm, wave2vec, multimodal
+from model import bert, lstm, wave2vec, multimodal
 
 
 def get_model(config: EasyDict) -> nn.Module:

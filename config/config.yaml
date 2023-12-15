@@ -13,7 +13,7 @@ data:
 model:
   text:
     pretrained_model_name: camembert-base
-    hidden_size: 100
+    hidden_size: 768
   
   audio:
     pretrained_model_name: facebook/wav2vec2-large-960h
@@ -26,5 +26,5 @@ model:
   
 learning:
   learning_rate: 0.01
-  batch_size: 32
+  batch_size: 16
   epochs: 5

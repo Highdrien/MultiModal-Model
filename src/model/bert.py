@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 from transformers import BertModel
-# from transformers import BertModel, BertForSequenceClassification, CamembertForSequenceClassification
 
 from typing import Optional, Any
 
@@ -11,7 +10,7 @@ from model.basemodel import BaseModel
 class BertClassifier(BaseModel):
     def __init__(self,
                  hidden_size: int,
-                 num_classes: int,
+                 num_classes: Optional[int]=2,
                  pretrained_model_name: Optional[str]='camembert-base', 
                  last_layer: Optional[bool]=True
                  ) -> None:

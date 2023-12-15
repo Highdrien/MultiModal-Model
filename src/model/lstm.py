@@ -11,22 +11,20 @@ class LSTMClassifier(BaseModel):
                  hidden_size: int,
                  num_classes: Optional[int]=2,
                  last_layer: Optional[bool]=True) -> None:
-        super(LSTMClassifier, self).__init__(hidden_size, last_layer, num_classes)
+        super(LSTMClassifier, self).__init__(hidden_size * 2, last_layer, num_classes)
         self.lstm = nn.LSTM(num_features, hidden_size, batch_first=True)
         self.dropout = nn.Dropout(0.1)
-        self.last_linear = nn.Linear(in_features=hidden_size, out_features=num_classes)
-        self.relu = nn.ReLU()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
-        input shape:  (B, num_frames, num_features)     dtype: torch.float32
+        input shape:  (batch_size, num_frames, num_features, 2)     dtype: torch.float32
         output_shape: (B, C) or (B, hidden_size)        dtype: torch.float32
         """
-        output = self.lstm(x) #input of shape (batch_size,nb_frames, nb_features)
-        # print("shape of output:",output[0].shape)
+        x0, x1 = x[..., 0], x[..., 1]
+        output0 = self.lstm(x0)[0][:, -1, :]
+        output1 = self.lstm(x1)[0][:, -1, :]
 
-        x = output[0][:,-1, :]  # Take the last hidden state
-        # print("shape of last_hidden_state:",last_hidden_state.shape)
+        x = torch.cat([output0, output1], dim=1)
 
         if self.last_layer:
             x = self.forward_last_layer(x=x)

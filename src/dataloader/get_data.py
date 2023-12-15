@@ -4,12 +4,13 @@ from typing import List, Optional
 
 import torch
 
+
 def get_text(info: pd.DataFrame) -> List[str]:
     filepath = info['text_filepath']
     ipu = info['ipu_id']
 
     df = pd.read_csv(filepath,
-                     skiprows=range(1, ipu - 5 + 2),
+                     skiprows=range(1, ipu - 6 + 2),
                      nrows=5)
     
     text = df['text'].str.cat(sep=' ')
@@ -36,6 +37,7 @@ def get_frame(info: pd.DataFrame,
     frames = torch.tensor(frames)
 
     return frames
+
 
 def get_audio_sf(info: pd.DataFrame,
                  audio_length: int
