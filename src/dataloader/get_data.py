@@ -10,7 +10,7 @@ def get_text(info: pd.DataFrame) -> List[str]:
     ipu = info['ipu_id']
 
     df = pd.read_csv(filepath,
-                     skiprows=range(1, ipu - 6 + 2),
+                     skiprows=range(1, ipu - 8 + 2),
                      nrows=5)
     
     text = df['text'].str.cat(sep=' ')

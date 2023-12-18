@@ -1,7 +1,10 @@
 from transformers import Wav2Vec2Processor, Wav2Vec2Model
 from typing import Optional
 import torch
-import torch.nn as nn
+
+import os
+import sys
+sys.path.append(os.path.join(sys.path[0], '..'))
 
 from model.basemodel import BaseModel
 
@@ -44,3 +47,18 @@ class Wav2Vec2Classifier(BaseModel):
             x = self.forward_last_layer(x=x)
 
         return x
+    
+    def check_device(self):
+        for param in self.parameters():
+            print(param.device)    
+
+
+
+if __name__ == '__main__':
+    device = torch.device("cuda")
+    audio = torch.rand((32, 1000, 2))
+    audio = audio.to(device)
+    model = Wav2Vec2Classifier(last_layer=True, num_classes=2)
+    model = model.to(device)
+    model.print()
+    model.forward(x=audio)

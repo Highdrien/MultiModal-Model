@@ -1,107 +1,192 @@
+import os
 import torch
-import torch.optim as optim
-import torch.nn.functional as F
-from torch.utils.data import DataLoader
+from torch import Tensor
+from torch.optim.lr_scheduler import MultiStepLR
+from tqdm import tqdm
+import time
+import numpy as np
+from easydict import EasyDict
+from icecream import ic
+import sys
+from typing import Tuple
 
-from dataloader.dataloader import DataGenerator, create_dataloader
-from model.multimodal import MultimodalClassifier
-from model.bert import BertClassifier
-from model.lstm import LSTMClassifier
-from model.wave2vec import Wav2Vec2Classifier
+sys.path.append(os.path.join(sys.path[0], '..'))
 
-# Hyperparameters
-learning_rate = 0.001
-batch_size = 32
-epochs = 5
-num_features = 709
-hidden_size = 768
-final_hidden_size = 100
+from src.dataloader.dataloader import create_dataloader
+from src.model.get_model import get_model
+from config.config import train_logger, train_step_logger
 
 
+def train(config: EasyDict) -> None:
 
-def initialize_model():
-    """
-    Initializes a multimodal classifier model.
+    # Use gpu or cpu
+    if torch.cuda.is_available() and config.learning.device == 'cuda':
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+    ic(device)
 
-    Returns:
-        model (MultimodalClassifier): The initialized multimodal classifier model.
-    """
-    model1 = BertClassifier(hidden_size=hidden_size, num_classes=2, last_layer=False)
-    model2 = LSTMClassifier(num_features=10, hidden_size=100, num_classes=2, last_layer=False)
-    model3 = Wav2Vec2Classifier(pretrained_model_name="facebook/wav2vec2-large-960h", last_layer=False)
+    # Get data
+    train_generator = create_dataloader(config=config, mode='train')
+    val_generator = create_dataloader(config=config, mode='val')
+    n_train, n_val = len(train_generator), len(val_generator)
+    ic(n_train, n_val)
 
-    model = MultimodalClassifier(bert_model=model1, lstm_model=model2, wav_model=model3, final_hidden_size=final_hidden_size, num_classes=2)
-    return model
+    # Get model
+    model = get_model(config)
+    model = model.to(device)
+    ic(model)
+    ic(model.get_number_parameters())
+    
+    # Loss
+    criterion = torch.nn.CrossEntropyLoss(reduction='mean')
 
-def load_data_generator(mode='train'):
-    LOAD = {'audio': True, 'text': True, 'video': True}
-    generator = DataGenerator(
-        mode=mode,
-        data_path='data',
-        load=LOAD,
-        sequence_size=10, #represent number of words in a sentence
-        audio_size=1000, #represent audio length
-        video_size=5 #represent number of frames
-    )
-    return generator
+    # Optimizer and Scheduler
+    optimizer = torch.optim.Adam(model.parameters(), lr=config.learning.learning_rate)
+    scheduler = MultiStepLR(optimizer, milestones=config.learning.milesstone, gamma=config.learning.gamma)
 
-def calculate_loss(predictions, targets):
-    return F.cross_entropy(predictions, targets)
+    save_experiment = config.save_experiment
+    ic(save_experiment)
+    if save_experiment:
+        logging_path = train_logger(config)
+        best_val_loss = 10e6
 
-def train(model, train_dataloader, optimizer, epochs=5):
-    model.train()
-    for epoch in range(epochs):
-        total_loss = 0
-        for text, audio, video, label in train_dataloader:
-            # Assuming label is a tensor of class indices
-            optimizer.zero_grad()
-            #convert audio to float32
-            predictions = model.forward(text, audio, video)
-            loss = calculate_loss(predictions, label)
+    # metrics = Metrics(config=config.metrics, device=device)
+    # num_metrics = metrics.num_metrics
+
+    ###############################################################
+    # Start Training                                              #
+    ###############################################################
+    start_time = time.time()
+
+    for epoch in range(1, config.learning.epochs + 1):
+        ic(epoch)
+        train_loss = 0
+        train_range = tqdm(train_generator)
+        # train_metrics = np.zeros(num_metrics)
+
+        # Training
+        for text, audio, video, label in train_range:
+
+            text = text.to(device)
+            audio = audio.to(device)
+            video = video.to(device)
+            label = label.to(device)
+
+            ic(audio.shape)
+            
+            y = forward(model=model, x=(text, audio, video), task=config.task)
+                
+            loss = criterion(y, label)
+
+            train_loss += loss.item()
+            # train_metrics += metrics.compute(y_pred=y_pred, y_true=y_true)
+
             loss.backward()
             optimizer.step()
-            total_loss += loss.item()
-        average_loss = total_loss / len(train_dataloader)
-        print(f"Epoch {epoch + 1}/{epochs}, Loss: {average_loss:.4f}")
+            optimizer.zero_grad()
 
-def main():
-    model = initialize_model()
+            train_range.set_description(f"TRAIN -> epoch: {epoch} || loss: {loss.item():.4f}")
+            train_range.refresh()
+
+
+        ###############################################################
+        # Start Validation                                            #
+        ###############################################################
+
+        val_loss = 0
+        val_range = tqdm(val_generator)
+        # val_metrics = np.zeros(num_metrics)
+
+        with torch.no_grad():
+            
+            for text, audio, video, label in val_range:
+                
+                text = text.to(device)
+                audio = audio.to(device)
+                video = video.to(device)
+                label = label.to(device)
+
+                y = forward(model=model, x=(text, audio, video), task=config.task, device=device)
+                    
+                loss = criterion(y, label)
+
+                # y_pred = torch.nn.functional.softmax(y_pred, dim=1)
+                
+                val_loss += loss.item()
+                # val_metrics += metrics.compute(y_pred=y_pred, y_true=y_true)
+
+                val_range.set_description(f"VAL  -> epoch: {epoch} || loss: {loss.item():.4f}")
+                val_range.refresh()
+        
+        scheduler.step()
+
+        ###################################################################
+        # Save Scores in logs                                             #
+        ###################################################################
+        train_loss = train_loss / n_train
+        val_loss = val_loss / n_val
+        # train_metrics = train_metrics / n_train
+        # val_metrics = val_metrics / n_val
+        
+        if save_experiment:
+            train_step_logger(path=logging_path, 
+                              epoch=epoch, 
+                              train_loss=train_loss, 
+                              val_loss=val_loss)
+            
+            if config.learning.save_checkpoint and val_loss < best_val_loss:
+                print('save model weights')
+                torch.save(model.state_dict(), os.path.join(logging_path, 'checkpoint.pt'))
+                best_val_loss = val_loss
+        
+        ic(best_val_loss)     
+
+    stop_time = time.time()
+    print(f"training time: {stop_time - start_time}secondes for {config.learning.epochs} epochs")
+
+    # if save_experiment and config.learning.save_learning_curves:
+    #     save_learning_curves(logging_path)
+
+
+def forward(model: torch.nn.Module,
+            x: Tuple[Tensor, Tensor, Tensor],
+            task: str
+            ) -> Tensor:
+    text, audio, video = x
+
+    if task == 'text':
+        y = model.forward(text)
     
-    # Hyperparameters
-    learning_rate = 0.001
-    batch_size = 32
-    epochs = 5
+    if task == 'audio':
+        y = model.forward(audio)
+    
+    if task == 'video':
+        y = model.forward(video)
+    
+    if task == 'all':
+        y = model.forward(text=text, audio=audio, frames=video)
+    
+    return y
+    
 
-    # Create data loaders
-    train_dataloader = DataLoader(load_data_generator(mode='train'), batch_size=batch_size, shuffle=True)
-    LOAD = {'audio': True, 'text': True, 'video': True}
-    test_dataloader = create_dataloader(mode='test', load=LOAD)
 
-    #print shape of one element of train_dataloader
-    text, audio, video, label = next(iter(train_dataloader))
-    print('text shape:', text.shape) #shape: (batch_size, sequence_size)
-    print('audio shape:', audio.shape) #shape: (batch_size, audio_length)
-    print('video shape:', video.shape) #shape: (batch_size, num_frames, num_features)
-    print('label shape:', label.shape)
 
-    #print dtype
-    print("dtype audio:", audio.dtype)
-    print("dtype text:", text.dtype)
-    print("dtype video:", video.dtype)
-    print("dtype label:", label.dtype)
 
-    # Define optimizer
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-    # Train the model
-    train(model, train_dataloader, optimizer, epochs=epochs)
 
-    # Evaluate on the test set
-    model.eval()
-    with torch.no_grad():
-        for text, audio, video, label in test_dataloader:
-            predictions = model(text, audio, video)
-            # Perform evaluation-related operations if needed
 
-if __name__ == "__main__":
-    main()
+
+
+if __name__ == '__main__':
+    import yaml
+    try:
+        stream = open(file=os.path.join('..', 'config', 'config.yaml'), mode='r')
+        config = EasyDict(yaml.safe_load(stream))
+        config.data.path = os.path.join('..', config.data.path)
+    except:
+        stream = open(file=os.path.join('config', 'config.yaml'), mode='r')
+        config = EasyDict(yaml.safe_load(stream))
+
+    ic(config)
+    train(config=config)
