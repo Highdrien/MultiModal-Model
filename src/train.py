@@ -73,8 +73,6 @@ def train(config: EasyDict) -> None:
             video = video.to(device)
             label = label.to(device)
 
-            ic(audio.shape)
-            
             y = forward(model=model, x=(text, audio, video), task=config.task)
                 
             loss = criterion(y, label)

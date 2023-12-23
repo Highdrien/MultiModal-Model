@@ -1,17 +1,17 @@
 import pandas as pd
 import soundfile as sf
-from typing import List, Optional
+from typing import List
 
 import torch
 
 
-def get_text(info: pd.DataFrame) -> List[str]:
+def get_text(info: pd.DataFrame, num_line_to_load: int=5) -> List[str]:
     filepath = info['text_filepath']
     ipu = info['ipu_id']
 
     df = pd.read_csv(filepath,
-                     skiprows=range(1, ipu - 8 + 2),
-                     nrows=5)
+                     skiprows=range(1, ipu - num_line_to_load + 2),
+                     nrows=num_line_to_load)
     
     text = df['text'].str.cat(sep=' ')
     return text
@@ -20,7 +20,7 @@ def get_text(info: pd.DataFrame) -> List[str]:
 def get_frame(info: pd.DataFrame,
               video_size: int,
               speaker: int,
-              useless_info_number: Optional[int]=5
+              useless_info_number: int=5
               ) -> torch.Tensor:
     """
     get the last <video_size> frame
@@ -50,3 +50,17 @@ def get_audio_sf(info: pd.DataFrame,
     audio = torch.tensor(audio).to(torch.float32)
     return audio
 
+
+if __name__ == '__main__':
+    import os
+    from icecream import ic
+
+    df = pd.read_csv(os.path.join('data', 'item_val.csv'))
+
+    index = 31
+    pd_info = df.loc[index]
+    ic(pd_info)
+
+    text = get_text(info=pd_info, num_line_to_load=5)
+    ic(text)
+    ic(len(text.split(' ')))

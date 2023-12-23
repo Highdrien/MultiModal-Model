@@ -1,6 +1,6 @@
 name: experiment
-task: audio           # choose btw text, audio, video or all
-save_experiment: false
+task: text           # choose btw text, audio, video or all
+save_experiment: true
 
 data:
   path: data          # data path

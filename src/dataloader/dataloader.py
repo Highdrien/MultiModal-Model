@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from typing import List, Tuple, Dict
+from typing import List, Dict
 from transformers import DistilBertTokenizer
 
 import torch
@@ -12,6 +12,8 @@ try:
     from dataloader import get_data
 except:
     import get_data
+
+torch.random.seed()
 
 
 class DataGenerator(Dataset):
@@ -36,6 +38,8 @@ class DataGenerator(Dataset):
         self.df = pd.read_csv(os.path.join(data_path, f"item_{mode}.csv"))
         self.num_data = len(self.df)
 
+        self.num_line_to_load_for_text = 8
+
         self.tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
 
     def __len__(self) -> int:
@@ -57,8 +61,14 @@ class DataGenerator(Dataset):
         text, audio, video = [torch.zeros(1)] * 3
 
         if self.load['text']:
-            text = get_data.get_text(info=line)
+            text = get_data.get_text(info=line, num_line_to_load=self.num_line_to_load_for_text)
             text = self.tokenizer(text)['input_ids'][:self.sequence_size]
+
+            if len(text) < self.sequence_size:
+                error_message = f'text must be have more than {self.sequence_size} elements, but found only {len(text)} elements.'
+                error_message += f"\n the file is: {line['text_filepath']} in the line (ipu)={line['ipu_id']}. Number line to load is {self.num_line_to_load_for_text}.\n"
+                raise ValueError(error_message)
+            
             text = torch.tensor(text)
         
         if self.load['audio']:
