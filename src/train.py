@@ -12,6 +12,7 @@ from torch import Tensor
 from torch.optim.lr_scheduler import MultiStepLR
 
 sys.path.append(up(os.path.abspath(__file__)))
+sys.path.append(up(up(os.path.abspath(__file__))))
 
 from src.model.get_model import get_model
 from src.dataloader.dataloader import create_dataloader
@@ -181,13 +182,8 @@ def forward(model: torch.nn.Module,
 
 if __name__ == '__main__':
     import yaml
-    try:
-        stream = open(file=os.path.join('..', 'config', 'config.yaml'), mode='r')
-        config = EasyDict(yaml.safe_load(stream))
-        config.data.path = os.path.join('..', config.data.path)
-    except:
-        stream = open(file=os.path.join('config', 'config.yaml'), mode='r')
-        config = EasyDict(yaml.safe_load(stream))
+    stream = open(file=os.path.join('config', 'config.yaml'), mode='r')
+    config = EasyDict(yaml.safe_load(stream))
 
     ic(config)
     train(config=config)
