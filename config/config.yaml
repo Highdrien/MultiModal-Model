@@ -27,7 +27,7 @@ model:
 learning:
   learning_rate: 0.01
   batch_size: 16
-  epochs: 5
+  epochs: 3
   device: cuda
   milesstone: [5, 15]         # gradient decay at epoch 5 and 15
   gamma: 0.1                  # learning rate will be multiplicate by 0.1 at epochs 5 and 15

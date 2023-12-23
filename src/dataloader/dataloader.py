@@ -67,6 +67,7 @@ class DataGenerator(Dataset):
             if len(text) < self.sequence_size:
                 error_message = f'text must be have more than {self.sequence_size} elements, but found only {len(text)} elements.'
                 error_message += f"\n the file is: {line['text_filepath']} in the line (ipu)={line['ipu_id']}. Number line to load is {self.num_line_to_load_for_text}.\n"
+                error_message += f"\n {self.mode = }, {index = }"
                 raise ValueError(error_message)
             
             text = torch.tensor(text)

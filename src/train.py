@@ -86,7 +86,7 @@ def train(config: EasyDict) -> None:
 
             train_range.set_description(f"TRAIN -> epoch: {epoch} || loss: {loss.item():.4f}")
             train_range.refresh()
-
+        
 
         ###############################################################
         # Start Validation                                            #
@@ -105,7 +105,7 @@ def train(config: EasyDict) -> None:
                 video = video.to(device)
                 label = label.to(device)
 
-                y = forward(model=model, x=(text, audio, video), task=config.task, device=device)
+                y = forward(model=model, x=(text, audio, video), task=config.task)
                     
                 loss = criterion(y, label)
 
@@ -114,7 +114,7 @@ def train(config: EasyDict) -> None:
                 val_loss += loss.item()
                 # val_metrics += metrics.compute(y_pred=y_pred, y_true=y_true)
 
-                val_range.set_description(f"VAL  -> epoch: {epoch} || loss: {loss.item():.4f}")
+                val_range.set_description(f"VAL   -> epoch: {epoch} || loss: {loss.item():.4f}")
                 val_range.refresh()
         
         scheduler.step()
@@ -133,12 +133,12 @@ def train(config: EasyDict) -> None:
                               train_loss=train_loss, 
                               val_loss=val_loss)
             
-            if config.learning.save_checkpoint and val_loss < best_val_loss:
+            if val_loss < best_val_loss:
                 print('save model weights')
                 torch.save(model.state_dict(), os.path.join(logging_path, 'checkpoint.pt'))
                 best_val_loss = val_loss
         
-        ic(best_val_loss)     
+            ic(best_val_loss)     
 
     stop_time = time.time()
     print(f"training time: {stop_time - start_time}secondes for {config.learning.epochs} epochs")
