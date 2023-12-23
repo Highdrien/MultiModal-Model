@@ -1,17 +1,19 @@
 import os
+import sys
 import pandas as pd
 from typing import List, Dict
-from transformers import DistilBertTokenizer
+from os.path import dirname as up
 
 import torch
 from torch import Tensor
 from torch.nn.functional import one_hot
+from transformers import DistilBertTokenizer
 from torch.utils.data import Dataset, DataLoader
 
-try:
-    from dataloader import get_data
-except:
-    import get_data
+sys.path.append(up(os.path.abspath(__file__)))
+sys.path.append(up(up(os.path.abspath(__file__))))
+
+from src.dataloader import get_data
 
 torch.random.seed()
 
@@ -109,8 +111,8 @@ def create_dataloader(mode: str, config: dict) -> DataLoader:
 
 if __name__ == '__main__':
     import yaml
-    from easydict import EasyDict
     from icecream import ic
+    from easydict import EasyDict
 
     stream = open('config/config.yaml', 'r')
     config = EasyDict(yaml.safe_load(stream))

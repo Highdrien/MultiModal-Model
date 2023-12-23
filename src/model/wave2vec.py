@@ -1,19 +1,21 @@
-from transformers import Wav2Vec2Processor, Wav2Vec2Model
-from typing import Optional
-import torch
-
 import os
 import sys
-sys.path.append(os.path.join(sys.path[0], '..'))
+from os.path import dirname as up
+
+import torch
+from transformers import Wav2Vec2Processor, Wav2Vec2Model
+
+sys.path.append(up(os.path.abspath(__file__)))
+sys.path.append(up(up(os.path.abspath(__file__))))
 
 from model.basemodel import BaseModel
 
 
 class Wav2Vec2Classifier(BaseModel):
     def __init__(self, 
-                 pretrained_model_name: Optional[str]='facebook/wav2vec2-large-960h',
-                 last_layer: Optional[bool]=True,
-                 num_classes: Optional[bool]=2,
+                 pretrained_model_name: str='facebook/wav2vec2-large-960h',
+                 last_layer: bool=True,
+                 num_classes: bool=2,
                  ) -> None:
         hidden_size = 2 * 1024
         super(Wav2Vec2Classifier, self).__init__(hidden_size * 2, last_layer, num_classes)
@@ -55,10 +57,11 @@ class Wav2Vec2Classifier(BaseModel):
 
 
 if __name__ == '__main__':
-    device = torch.device("cuda")
+    # device = torch.device("cuda")
     audio = torch.rand((32, 1000, 2))
-    audio = audio.to(device)
+    # audio = audio.to(device)
     model = Wav2Vec2Classifier(last_layer=True, num_classes=2)
-    model = model.to(device)
-    model.print()
-    model.forward(x=audio)
+    # model = model.to(device)
+    # model.print()
+    y = model.forward(x=audio)
+    print(y.shape)

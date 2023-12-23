@@ -1,7 +1,13 @@
+import os
+import sys
+from typing import Optional
+from os.path import dirname as up
+
 import torch    
 import torch.nn as nn
 
-from typing import Optional
+sys.path.append(up(os.path.abspath(__file__)))
+sys.path.append(up(up(os.path.abspath(__file__))))
 
 from model.basemodel import Model
 from model.bert import BertClassifier
@@ -51,3 +57,33 @@ class MultimodalClassifier(Model):
         x = self.relu(x)
         x = self.fc2(x)
         return x
+    
+
+
+if __name__ == '__main__':
+    import yaml
+    from easydict import EasyDict
+    from get_model import get_model
+
+    stream = open('config/config.yaml', 'r')
+    config = EasyDict(yaml.safe_load(stream))
+
+    BATCH_SIZE = config.learning.batch_size
+    SEQUENCE_SIZE = config.data.sequence_size
+    VIDEO_SIZE = config.data.num_frames
+    AUDIO_SIZE = config.data.audio_length
+    NUM_FEATURES = config.data.num_features
+    
+    config.task = 'all'
+    model = get_model(config)
+
+    text = torch.randint(0, 100, (BATCH_SIZE, SEQUENCE_SIZE))
+    audio = torch.rand((BATCH_SIZE, AUDIO_SIZE, 2))
+    frames = torch.rand((BATCH_SIZE, VIDEO_SIZE, NUM_FEATURES, 2))
+
+    print('text:', text.shape, text.dtype)
+    print('audio:', audio.shape, audio.dtype)
+    print('video:', frames.shape, frames.dtype)
+
+    y = model.forward(text=text, audio=audio, frames=frames)
+    print('output:', y.shape, y.dtype)

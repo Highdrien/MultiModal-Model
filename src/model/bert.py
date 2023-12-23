@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Any, Dict, Mapping
+from typing import Any
 from os.path import dirname as up
 
 import torch
@@ -52,30 +52,24 @@ class BertClassifier(BaseModel):
             logits = self.forward_last_layer(x=logits)
         
         return logits
-
-    # def get_only_learned_parameters(self) -> Dict[str, torch.Tensor]:
-    #     state_dict: Dict[str, torch.Tensor] = {}
-    #     for name, param in self.named_parameters():
-    #         if param.requires_grad:
-    #             state_dict[name] = param
-
-    #     return state_dict
-    
-    # def load_state_dict(self, state_dict: Mapping[str, Any], strict: bool = True):
-    #     return super().load_state_dict(state_dict, strict)
     
 
 if __name__ == '__main__':
     from icecream import ic
     model = BertClassifier()
 
-    # state_dict = model.get_only_learned_parameters()
-    # ic(state_dict)
+    state_dict = model.get_only_learned_parameters()
+    ic(state_dict)
+
+    x = torch.randint(0, 10, (64, 20))
+    print(x.shape)
+    y = model(x)
+    print(y.shape)
 
     # torch.save(state_dict, 'textmodel_weigth.pt')
 
-    state_dict = torch.load('textmodel_weigth.pt')
-    ic(state_dict)
+    # state_dict = torch.load('textmodel_weigth.pt')
+    # ic(state_dict)
 
-    model.load_state_dict(state_dict, strict=False)
+    # model.load_state_dict(state_dict, strict=False)
 

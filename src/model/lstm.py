@@ -1,6 +1,13 @@
+import os
+import sys
+from os.path import dirname as up
+
 import torch
 import torch.nn as nn
 from typing import Optional
+
+sys.path.append(up(os.path.abspath(__file__)))
+sys.path.append(up(up(os.path.abspath(__file__))))
 
 from model.basemodel import BaseModel
 
@@ -30,3 +37,16 @@ class LSTMClassifier(BaseModel):
             x = self.forward_last_layer(x=x)
 
         return x
+
+
+if __name__ == '__main__':
+    model = LSTMClassifier(num_features=709,
+                           hidden_size=100,
+                           num_classes=2,
+                           last_layer=True)
+    
+    print('learning parameters:', model.get_number_parameters())
+    x = torch.rand((64, 10, 709, 2))
+    print("shape entrée:", x.shape)
+    y = model.forward(x)
+    print("shape sortie", y.shape)
