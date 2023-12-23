@@ -1,19 +1,21 @@
 import os
+import sys
+import time
+from tqdm import tqdm
+from icecream import ic
+from typing import Tuple
+from easydict import EasyDict
+from os.path import dirname as up
+
 import torch
 from torch import Tensor
 from torch.optim.lr_scheduler import MultiStepLR
-from tqdm import tqdm
-import time
-import numpy as np
-from easydict import EasyDict
-from icecream import ic
-import sys
-from typing import Tuple
 
-sys.path.append(os.path.join(sys.path[0], '..'))
+sys.path.append(up(os.path.abspath(__file__)))
 
-from src.dataloader.dataloader import create_dataloader
 from src.model.get_model import get_model
+from src.dataloader.dataloader import create_dataloader
+from utils.plot_learning_curves import save_learning_curves
 from config.config import train_logger, train_step_logger
 
 
@@ -144,8 +146,8 @@ def train(config: EasyDict) -> None:
     stop_time = time.time()
     print(f"training time: {stop_time - start_time}secondes for {config.learning.epochs} epochs")
 
-    # if save_experiment and config.learning.save_learning_curves:
-    #     save_learning_curves(logging_path)
+    if save_experiment and config.learning.save_learning_curves:
+        save_learning_curves(logging_path)
 
 
 def forward(model: torch.nn.Module,
