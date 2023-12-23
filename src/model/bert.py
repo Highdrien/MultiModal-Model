@@ -1,33 +1,43 @@
+import os
+import sys
+from typing import Any, Dict, Mapping
+from os.path import dirname as up
+
 import torch
 import torch.nn as nn
-from transformers import BertModel
+from transformers import BertModel  
 
-from typing import Optional, Any
+sys.path.append(up(up(os.path.abspath(__file__))))
 
 from model.basemodel import BaseModel
 
 
 class BertClassifier(BaseModel):
     def __init__(self,
-                 hidden_size: int,
-                 num_classes: Optional[int]=2,
-                 pretrained_model_name: Optional[str]='camembert-base', 
-                 last_layer: Optional[bool]=True
+                 hidden_size: int=768,
+                 num_classes: int=2,
+                 pretrained_model_name: str='camembert-base', 
+                 last_layer: bool=True,
+                 freeze_bert_parameters: bool=True
                  ) -> None:
         super(BertClassifier, self).__init__(hidden_size, last_layer, num_classes)
 
         self.bert=BertModel.from_pretrained(pretrained_model_name, output_hidden_states=True)
-        for param in self.bert.parameters():
-            param.requires_grad = False
+
+        if freeze_bert_parameters:
+            for param in self.bert.parameters():
+                param.requires_grad = False
 
         self.dropout = nn.Dropout(0.1)
         self.fc = nn.Linear(hidden_size, hidden_size)
         self.last_linear = nn.Linear(in_features=hidden_size, out_features=num_classes)
         self.relu = nn.ReLU()
 
+        # print(next(self.fc.parameters()))
+
     def forward(self,
                 x: torch.Tensor,
-                attention_mask: Optional[Any]=None
+                attention_mask: Any=None
                 ) -> torch.Tensor:
         """
         x shape: (B, sequence_size),                dtype: torch.int64
@@ -42,3 +52,30 @@ class BertClassifier(BaseModel):
             logits = self.forward_last_layer(x=logits)
         
         return logits
+
+    # def get_only_learned_parameters(self) -> Dict[str, torch.Tensor]:
+    #     state_dict: Dict[str, torch.Tensor] = {}
+    #     for name, param in self.named_parameters():
+    #         if param.requires_grad:
+    #             state_dict[name] = param
+
+    #     return state_dict
+    
+    # def load_state_dict(self, state_dict: Mapping[str, Any], strict: bool = True):
+    #     return super().load_state_dict(state_dict, strict)
+    
+
+if __name__ == '__main__':
+    from icecream import ic
+    model = BertClassifier()
+
+    # state_dict = model.get_only_learned_parameters()
+    # ic(state_dict)
+
+    # torch.save(state_dict, 'textmodel_weigth.pt')
+
+    state_dict = torch.load('textmodel_weigth.pt')
+    ic(state_dict)
+
+    model.load_state_dict(state_dict, strict=False)
+

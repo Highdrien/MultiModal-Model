@@ -1,12 +1,13 @@
 from easydict import EasyDict
-import torch.nn as nn
 
+from model.basemodel import Model
 from model import bert, lstm, wave2vec, multimodal
 
 
-def get_model(config: EasyDict) -> nn.Module:
+def get_model(config: EasyDict) -> Model:
     implemented = ['text', 'audio', 'video', 'all']
-    assert config.task in implemented, NotImplementedError
+    if config.task not in implemented:
+        raise NotImplementedError(f'Expected config.task in {implemented} but found {config.task}')
 
     cfg_model = config.model[config.task]
 

@@ -131,11 +131,12 @@ def train(config: EasyDict) -> None:
             train_step_logger(path=logging_path, 
                               epoch=epoch, 
                               train_loss=train_loss, 
-                              val_loss=val_loss)
+                               val_loss=val_loss)
             
             if val_loss < best_val_loss:
                 print('save model weights')
-                torch.save(model.state_dict(), os.path.join(logging_path, 'checkpoint.pt'))
+                torch.save(model.get_only_learned_parameters(),
+                           os.path.join(logging_path, 'checkpoint.pt'))
                 best_val_loss = val_loss
         
             ic(best_val_loss)     

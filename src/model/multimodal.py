@@ -3,12 +3,13 @@ import torch.nn as nn
 
 from typing import Optional
 
+from model.basemodel import Model
 from model.bert import BertClassifier
 from model.lstm import LSTMClassifier
 from model.wave2vec import Wav2Vec2Classifier
 
 
-class MultimodalClassifier(nn.Module):
+class MultimodalClassifier(Model):
     def __init__(self,
                  bert_model: BertClassifier,
                  lstm_model: LSTMClassifier,

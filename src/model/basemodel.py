@@ -1,14 +1,29 @@
 import torch
 import torch.nn as nn
-# import numpy as np
-from typing import Any, Mapping, Optional
 
 
-class BaseModel(nn.Module):
+class Model(nn.Module):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+    
+    def get_number_parameters(self) -> int:
+        """Return the number of parameters of the model"""
+        return sum(p.numel() for p in self.parameters() if p.requires_grad)
+
+    def get_only_learned_parameters(self) -> dict[str, torch.Tensor]:
+        state_dict: dict[str, torch.Tensor] = {}
+        for name, param in self.named_parameters():
+            if param.requires_grad:
+                state_dict[name] = param
+
+        return state_dict
+
+
+class BaseModel(Model):
     def __init__(self,
                  hidden_size: int,
-                 last_layer: Optional[bool]=True,
-                 num_classes: Optional[int]=2
+                 last_layer: bool=True,
+                 num_classes: int=2
                  ) -> None:
         super().__init__()
         self.last_layer = last_layer
@@ -28,8 +43,4 @@ class BaseModel(nn.Module):
     
     def get_hidden_size(self) -> int:
         return self.hidden_size
-
-    def get_number_parameters(self) -> int:
-        """Return the number of parameters of the model"""
-        return sum(p.numel() for p in self.parameters() if p.requires_grad)
     
