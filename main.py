@@ -36,7 +36,7 @@ def main(options: dict) -> None:
     if options['mode'] == 'train':
         config = load_config(options['config_path'])
         if options['task'] is not None:
-            config.task.task_name = options['task']
+            config.task = options['task']
         ic(config)
         train(config)
     
