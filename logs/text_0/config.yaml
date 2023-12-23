@@ -1,4 +1,4 @@
-config_metadata: 'Saving time : 12/23/2023, 21:20:49'
+config_metadata: 'Saving time : 12/23/2023, 21:52:20'
 name: 'experiment'
 task: 'text'
 save_experiment: true
@@ -28,8 +28,9 @@ model:
 learning:
     learning_rate: 0.01
     batch_size: 16
-    epochs: 2
+    epochs: 5
     device: 'cuda'
     milesstone: [5, 15]
     gamma: 0.1
     loss: 'crossentropy'
+    save_learning_curves: true
