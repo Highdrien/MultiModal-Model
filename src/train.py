@@ -3,7 +3,6 @@ import sys
 import time
 from tqdm import tqdm
 from icecream import ic
-from typing import Tuple
 from easydict import EasyDict
 from os.path import dirname as up
 
@@ -14,6 +13,7 @@ from torch.optim.lr_scheduler import MultiStepLR
 sys.path.append(up(os.path.abspath(__file__)))
 sys.path.append(up(up(os.path.abspath(__file__))))
 
+from src.model.basemodel import Model
 from src.model.get_model import get_model
 from src.dataloader.dataloader import create_dataloader
 from utils.plot_learning_curves import save_learning_curves
@@ -69,14 +69,11 @@ def train(config: EasyDict) -> None:
         # train_metrics = np.zeros(num_metrics)
 
         # Training
-        for text, audio, video, label in train_range:
+        for data, label in train_range:
 
-            text = text.to(device)
-            audio = audio.to(device)
-            video = video.to(device)
+            dict_to_device(data, device)
             label = label.to(device)
-
-            y = forward(model=model, x=(text, audio, video), task=config.task)
+            y = forward(model=model, data=data, task=config.task)
                 
             loss = criterion(y, label)
 
@@ -101,20 +98,15 @@ def train(config: EasyDict) -> None:
 
         with torch.no_grad():
             
-            for text, audio, video, label in val_range:
+            for data, label in val_range:
                 
-                text = text.to(device)
-                audio = audio.to(device)
-                video = video.to(device)
+                dict_to_device(data, device)
                 label = label.to(device)
-
-                y = forward(model=model, x=(text, audio, video), task=config.task)
+                y = forward(model=model, data=data, task=config.task)
                     
-                loss = criterion(y, label)
-
-                # y_pred = torch.nn.functional.softmax(y_pred, dim=1)
-                
+                loss = criterion(y, label)                
                 val_loss += loss.item()
+
                 # val_metrics += metrics.compute(y_pred=y_pred, y_true=y_true)
 
                 val_range.set_description(f"VAL   -> epoch: {epoch} || loss: {loss.item():.4f}")
@@ -151,28 +143,20 @@ def train(config: EasyDict) -> None:
         save_learning_curves(logging_path)
 
 
-def forward(model: torch.nn.Module,
-            x: Tuple[Tensor, Tensor, Tensor],
-            task: str
-            ) -> Tensor:
-    text, audio, video = x
+def forward(model: Model, data: dict[str, Tensor], task: str) -> Tensor:
+    """ forward data in the model accroding the task """
+    if task != 'all':
+        return model.forward(data[task])
+    else:
+        return model.forward(text=data['text'], audio=data['audio'], frames=data['video'])
 
-    if task == 'text':
-        y = model.forward(text)
-    
-    if task == 'audio':
-        y = model.forward(audio)
-    
-    if task == 'video':
-        y = model.forward(video)
-    
-    if task == 'all':
-        y = model.forward(text=text, audio=audio, frames=video)
-    
-    return y
     
 
-
+def dict_to_device(data: dict[str, Tensor], device: torch.Tensor) -> None:
+    """ load all the data.values in the device """
+    for key in data.keys():
+        data[key] = data[key].to(device)
+    
 
 
 

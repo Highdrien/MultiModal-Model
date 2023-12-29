@@ -1,7 +1,7 @@
 import os
 import sys
 import pandas as pd
-from typing import List, Dict
+from typing import Tuple
 from os.path import dirname as up
 
 import torch
@@ -12,6 +12,7 @@ from torch.utils.data import Dataset, DataLoader
 
 sys.path.append(up(os.path.abspath(__file__)))
 sys.path.append(up(up(os.path.abspath(__file__))))
+sys.path.append(up(up(up(os.path.abspath(__file__)))))
 
 from src.dataloader import get_data
 
@@ -22,7 +23,7 @@ class DataGenerator(Dataset):
     def __init__(self,
                  mode: str,
                  data_path: str,
-                 load: Dict[str, bool],
+                 load: dict[str, bool],
                  sequence_size: int,
                  audio_size: int,
                  video_size: int) -> None:
@@ -47,10 +48,22 @@ class DataGenerator(Dataset):
     def __len__(self) -> int:
         return self.num_data
     
-    def __getitem__(self, index: int) -> List[Tensor]:
-        """ renvoie 4 tensors: text, audio, video et label
-        les 3 premiers peuvent valoir torch.zeros(0) si load[<type>]=False
+    def __getitem__(self, index: int) -> Tuple[dict[str, Tensor], Tensor]:
+        """
+        ----
+        ARGUMENTS
+        index: int
+            number of batch that will be load
+        -----
+        OUTPUT:
+        data: dict[str, Tensor]
+            dictionary of data witch containt keys like text, audio or/and video
+            and the torch tensor for the value of the corresponding key
+            find the shape below
+        label: Tensor
+            label of the results
 
+        -----
         SHAPE AFTER BATCH
         text  shape:    (batch_size, sequence size)
         audio shape:    (batch_size, audio_length, 2)
@@ -60,7 +73,7 @@ class DataGenerator(Dataset):
         line = self.df.loc[index]
         label = torch.tensor(int(line['label']))
         label = one_hot(label, num_classes=2).to(torch.float32)
-        text, audio, video = [torch.zeros(1)] * 3
+        data : dict[str, Tensor] = {}
 
         if self.load['text']:
             text = get_data.get_text(info=line, num_line_to_load=self.num_line_to_load_for_text)
@@ -73,18 +86,20 @@ class DataGenerator(Dataset):
                 raise ValueError(error_message)
             
             text = torch.tensor(text)
+            data['text'] = text
         
         if self.load['audio']:
             audio = get_data.get_audio_sf(info=line, audio_length=self.audio_size)
+            data['audio'] = audio
 
         if self.load['video']:
             s0 = get_data.get_frame(info=line, video_size=self.video_size, speaker=0)
             s1 = get_data.get_frame(info=line, video_size=self.video_size, speaker=1)
 
-            # video = torch.concat([s0, s1], dim=0)
             video = torch.stack([s0, s1], dim=len(s0.shape))
+            data['video'] = video
         
-        return text, audio, video, label
+        return data, label
         
 
 
@@ -120,8 +135,9 @@ if __name__ == '__main__':
     ic(config)
 
     test_dataloader = create_dataloader(mode='test', config=config)
-    text, audio, video, label = next(iter(test_dataloader))
-    print('text shape:', text.shape)
-    print('audio shape:', audio.shape)
-    print('video shape:', video.shape)
+    data, label = next(iter(test_dataloader))
+    
+    print('text  shape:', data['text'].shape)
+    print('audio shape:', data['audio'].shape)
+    print('video shape:', data['video'].shape)
     print('label shape:', label.shape)
