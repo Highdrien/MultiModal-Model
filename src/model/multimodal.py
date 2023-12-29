@@ -42,11 +42,15 @@ class MultimodalClassifier(Model):
                 audio: torch.Tensor,
                 frames: torch.Tensor
                 ) -> torch.Tensor:
-        """
+        """ go through the model
+
         input       shape                          dtype
         text    (B, sequence_size)              torch.int64
         audio   (B, audio_length)               torch.float32
         frames  (B, num_frames, num_features)   torch.float32
+
+        ouput       shape                          dtype
+        logits  (B, num_classes)                torch.float32
         """
         text = self.bert_model.forward(text)
         audio = self.wav_model.forward(audio)
