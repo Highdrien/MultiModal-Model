@@ -1,7 +1,6 @@
 import os
 import sys
 import numpy as np
-from icecream import ic
 from easydict import EasyDict
 from os.path import dirname as up
 
@@ -23,7 +22,6 @@ class Metrics:
         # test if metrics is in config
         if 'metrics' in config:
             metrics_name = list(filter(lambda x: config.metrics[x], config.metrics))
-            ic(metrics_name)
         
         # test with metrics there are
         if 'acc' in metrics_name:
@@ -38,7 +36,6 @@ class Metrics:
         if 'f1' in  metrics_name or 'f1score' in metrics_name:
             self.metrics['f1'] = F1Score(task='binary')
     
-        ic(self.metrics)
         self.num_metrics = len(self.metrics)
     
     def compute(self, y_pred: Tensor, y_true: Tensor) -> np.ndarray:
@@ -47,10 +44,15 @@ class Metrics:
         """
         metrics_value = []
         for metric in self.metrics.values():
-            metrics_value.append(metric(y_pred, y_true))
+            metrics_value.append(metric(y_pred, y_true).item())
         return np.array(metrics_value)
 
-
+    def __str__(self) -> str:
+        return f'Metrics: {self.metrics}'
+    
+    def to(self, device: torch.device) -> None:
+        for key in self.metrics.keys():
+            self.metrics[key] = self.metrics[key].to(device)
 
 
 if __name__ == '__main__':
@@ -63,11 +65,11 @@ if __name__ == '__main__':
     y_true[y_true <= seuil] = 0 
     y_true[y_true > seuil] = 1
 
-    ic(y_pred)
-    ic(y_true)
 
     metrics = Metrics(config=config)
+    print(metrics)
     metrics_value = metrics.compute(y_pred=y_pred, y_true=y_true)
+    print(metrics_value)
 
     for i, metric_name in enumerate(metrics.metrics.keys()):
         print(f"{metric_name[:6]}\t->\t{metrics_value[i]:.3f}")

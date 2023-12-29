@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import numpy as np
 from tqdm import tqdm
 from icecream import ic
 from easydict import EasyDict
@@ -13,6 +14,7 @@ from torch.optim.lr_scheduler import MultiStepLR
 sys.path.append(up(os.path.abspath(__file__)))
 sys.path.append(up(up(os.path.abspath(__file__))))
 
+from src.metrics import Metrics
 from src.model.basemodel import Model
 from src.model.get_model import get_model
 from src.dataloader.dataloader import create_dataloader
@@ -48,14 +50,16 @@ def train(config: EasyDict) -> None:
     optimizer = torch.optim.Adam(model.parameters(), lr=config.learning.learning_rate)
     scheduler = MultiStepLR(optimizer, milestones=config.learning.milesstone, gamma=config.learning.gamma)
 
+    # Get Metrics
+    metrics = Metrics(config=config)
+    metrics.to(device)
+
     save_experiment = config.save_experiment
     ic(save_experiment)
     if save_experiment:
         logging_path = train_logger(config)
         best_val_loss = 10e6
 
-    # metrics = Metrics(config=config.metrics, device=device)
-    # num_metrics = metrics.num_metrics
 
     ###############################################################
     # Start Training                                              #
@@ -66,25 +70,26 @@ def train(config: EasyDict) -> None:
         ic(epoch)
         train_loss = 0
         train_range = tqdm(train_generator)
-        # train_metrics = np.zeros(num_metrics)
+        train_metrics = np.zeros(metrics.num_metrics)
 
         # Training
-        for data, label in train_range:
+        for i, (data, y_true) in enumerate(train_range):
 
             dict_to_device(data, device)
-            label = label.to(device)
-            y = forward(model=model, data=data, task=config.task)
+            y_true = y_true.to(device)
+            y_pred = forward(model=model, data=data, task=config.task)
                 
-            loss = criterion(y, label)
+            loss = criterion(y_pred, y_true)
 
             train_loss += loss.item()
-            # train_metrics += metrics.compute(y_pred=y_pred, y_true=y_true)
+            train_metrics += metrics.compute(y_pred=y_pred, y_true=y_true)
 
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
 
-            train_range.set_description(f"TRAIN -> epoch: {epoch} || loss: {loss.item():.4f}")
+            current_loss = train_loss / (i + 1)
+            train_range.set_description(f"TRAIN -> epoch: {epoch} || loss: {current_loss:.4f}")
             train_range.refresh()
         
 
@@ -94,22 +99,23 @@ def train(config: EasyDict) -> None:
 
         val_loss = 0
         val_range = tqdm(val_generator)
-        # val_metrics = np.zeros(num_metrics)
+        val_metrics = np.zeros(metrics.num_metrics)
 
         with torch.no_grad():
             
-            for data, label in val_range:
+            for i, (data, y_true) in enumerate(val_range):
                 
                 dict_to_device(data, device)
-                label = label.to(device)
-                y = forward(model=model, data=data, task=config.task)
+                y_true = y_true.to(device)
+                y_pred = forward(model=model, data=data, task=config.task)
                     
-                loss = criterion(y, label)                
+                loss = criterion(y_pred, y_true)                
                 val_loss += loss.item()
 
-                # val_metrics += metrics.compute(y_pred=y_pred, y_true=y_true)
+                val_metrics += metrics.compute(y_pred=y_pred, y_true=y_true)
 
-                val_range.set_description(f"VAL   -> epoch: {epoch} || loss: {loss.item():.4f}")
+                current_loss = val_loss / (i + 1)
+                val_range.set_description(f"VAL   -> epoch: {epoch} || loss: {current_loss:.4f}")
                 val_range.refresh()
         
         scheduler.step()
@@ -119,14 +125,16 @@ def train(config: EasyDict) -> None:
         ###################################################################
         train_loss = train_loss / n_train
         val_loss = val_loss / n_val
-        # train_metrics = train_metrics / n_train
-        # val_metrics = val_metrics / n_val
+        train_metrics = train_metrics / n_train
+        val_metrics = val_metrics / n_val
         
         if save_experiment:
             train_step_logger(path=logging_path, 
                               epoch=epoch, 
                               train_loss=train_loss, 
-                               val_loss=val_loss)
+                              val_loss=val_loss,
+                              train_metrics=train_metrics,
+                              val_metrics=val_metrics)
             
             if val_loss < best_val_loss:
                 print('save model weights')
