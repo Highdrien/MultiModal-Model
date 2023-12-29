@@ -34,3 +34,9 @@ learning:
   loss: crossentropy
   save_learning_curves: true
   
+metrics:
+  acc: true
+  precision: true
+  recall: true
+  f1: true
+
