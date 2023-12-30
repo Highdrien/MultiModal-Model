@@ -1,0 +1,54 @@
+\documentclass[a4paper]{article}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}   % pour les images
+% \usepackage{svg}        % pour les svg (images vectoriel)
+\usepackage{hyperref}   % pour les références
+\usepackage{amssymb}    % pour les symboles de maths comme \mathbb{R}
+\usepackage{mathtools}  % pour rajouter \text dans un environment math
+\usepackage{subcaption} % pour les subfigures
+
+\title{Rapport SAM \\ Modèle multi-modaux}
+\author{Cléa Han, Yanis Labeyrie et Adrien Zabban}
+\date{janvier 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\section{Données}
+parler des données (d'où elles viennent)
+dire que les vidéos sont déjà pré-traités (analyse des landmarks)
+parler (et redéfinir) les IPUs
+comment sont agencées les données
+parler des problèmes (temps de chargement du csv) et comment on l'a résolu : avec des skiprows
+
+\section{Traitement unimodale}
+
+\subsection{Traitement du texte}
+on a utilisé Bert
+
+\subsection{Traitement de l'audio}
+on a utilisé wave2vect
+
+\subsection{Traitement de la vidéo}
+on utilise 1 voir 2 couches LSTM
+
+\section{Traitement multimodal}
+
+\subsection{Maximum de vraisemblance}
+on prend la solution la plus prédite
+
+\subsection{Apprentissage basique}
+on enlève la dernière couche dense de chaque modèle et on concatène tout et on refait passer dans une couche dense
+(on utilise les entrainements déjà faits) en gelant les poids précédant
+
+\subsection{Entraînement du gros modèle}
+on ne gèle pas les poids
+
+\section{Conclusion}
+
+\end{document}
