@@ -1,5 +1,4 @@
 text_filepath,ipu_id,stoptime,label,frame_path_0,frame_index_0,frame_path_1,frame_index_1,audio_filepath,item
-data\transcr\JSCL_merge.csv,0,0.427,False,data\video\openface\cheese_JSCL_JS.csv,11,data\video\openface\cheese_JSCL_CL.csv,11,data\audio\2_channels\JS_CL.wav,0
 data\transcr\JSCL_merge.csv,1,4.71,False,data\video\openface\cheese_JSCL_JS.csv,118,data\video\openface\cheese_JSCL_CL.csv,118,data\audio\2_channels\JS_CL.wav,1
 data\transcr\JSCL_merge.csv,2,7.907,False,data\video\openface\cheese_JSCL_JS.csv,198,data\video\openface\cheese_JSCL_CL.csv,198,data\audio\2_channels\JS_CL.wav,2
 data\transcr\JSCL_merge.csv,3,9.84,False,data\video\openface\cheese_JSCL_JS.csv,246,data\video\openface\cheese_JSCL_CL.csv,246,data\audio\2_channels\JS_CL.wav,3

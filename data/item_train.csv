@@ -6066,7 +6066,6 @@ data\transcr\MLHE_merge.csv,728,1259.06,False,data\video\openface\paco_BECR_BE.c
 data\transcr\MLHE_merge.csv,729,1261.105,False,data\video\openface\paco_BECR_BE.csv,139,data\video\openface\paco_BECR_CR.csv,139,data\audio\2_channels\ML_HE.wav,6064
 data\transcr\MLHE_merge.csv,730,1262.64,False,data\video\openface\paco_BECR_BE.csv,255,data\video\openface\paco_BECR_CR.csv,255,data\audio\2_channels\ML_HE.wav,6065
 data\transcr\BECR_merge.csv,0,1.735,True,data\video\openface\paco_BECR_BE.csv,275,data\video\openface\paco_BECR_CR.csv,275,data\audio\2_channels\BE_CR.wav,6066
-data\transcr\BECR_merge.csv,1,0.98,False,data\video\openface\paco_BECR_BE.csv,374,data\video\openface\paco_BECR_CR.csv,374,data\audio\2_channels\BE_CR.wav,6067
 data\transcr\BECR_merge.csv,2,2.97,False,data\video\openface\paco_BECR_BE.csv,470,data\video\openface\paco_BECR_CR.csv,470,data\audio\2_channels\BE_CR.wav,6068
 data\transcr\BECR_merge.csv,3,3.56,False,data\video\openface\paco_BECR_BE.csv,544,data\video\openface\paco_BECR_CR.csv,544,data\audio\2_channels\BE_CR.wav,6069
 data\transcr\BECR_merge.csv,4,5.525,False,data\video\openface\paco_BECR_BE.csv,674,data\video\openface\paco_BECR_CR.csv,674,data\audio\2_channels\BE_CR.wav,6070
