@@ -1,5 +1,6 @@
 import os
 import sys
+from icecream import ic
 from os.path import dirname as up
 
 import torch
@@ -27,12 +28,15 @@ class Wav2Vec2Classifier(BaseModel):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
+        pass the 2 audio into the pre-train model and concatenate the 2 outputs
+
         audio shape:  (B, audio_length, 2)         dtype: torch.float32
         output shape: (B, 4096) or (B, C)    dtype: torch.float32
         """
         x0, x1 = x[..., 0], x[..., 1]
-        x0 = self.processor(x0, return_tensors="pt", padding="longest", sampling_rate=16000).input_values
-        x1 = self.processor(x1, return_tensors="pt", padding="longest", sampling_rate=16000).input_values
+
+        x0 = self.processor(x0, return_tensors="pt", padding="longest", sampling_rate=16000).input_values.to(self.model.device)
+        x1 = self.processor(x1, return_tensors="pt", padding="longest", sampling_rate=16000).input_values.to(self.model.device)
 
         x0 = torch.squeeze(x0)
         x1 = torch.squeeze(x1)
@@ -49,19 +53,22 @@ class Wav2Vec2Classifier(BaseModel):
             x = self.forward_last_layer(x=x)
 
         return x
-    
-    def check_device(self):
-        for param in self.parameters():
-            print(param.device)    
 
 
 
 if __name__ == '__main__':
-    # device = torch.device("cuda")
     audio = torch.rand((32, 1000, 2))
-    # audio = audio.to(device)
+    print(f'input shape: {audio.shape}')
+    
     model = Wav2Vec2Classifier(last_layer=True, num_classes=2)
-    # model = model.to(device)
-    # model.print()
     y = model.forward(x=audio)
-    print(y.shape)
+    print(f'output shape: {y.shape}')
+
+    device = torch.device("cuda")
+    audio = audio.to(device)
+    model = model.to(device)
+    # model.check_device()
+
+    audio = audio.to(device)
+    model.forward(x=audio)
+
