@@ -22,7 +22,7 @@ def train_logger(config: EasyDict) -> str:
     creates a logs folder where we can find the config in confing.yaml and
     create train_log.csv which will contain the loss and metrics values
     """
-    path = 'logs'
+    path = config.logs if 'logs' in config else 'logs'
     if not os.path.exists(path):
         os.makedirs(path)
     folder_name = number_folder(path, config.task + '_')
