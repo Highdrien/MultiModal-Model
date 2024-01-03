@@ -1,7 +1,12 @@
 name: experiment
-task: video           # choose btw text, audio, video or all
+task: multi           # choose btw text, audio, video or multi
 save_experiment: true
 logs: logs
+
+load:                 # data to use (only for multi)
+  text: true
+  audio: true
+  video: false
 
 data:
   path: /content/gdrive/MyDrive/SAM_I3A/data          # data path
@@ -22,8 +27,9 @@ model:
   video:
     hidden_size: 100
   
-  all:
+  multi:
     hidden_size: 100
+    freeze_basemodel: true
   
 learning:
   learning_rate: 0.01
