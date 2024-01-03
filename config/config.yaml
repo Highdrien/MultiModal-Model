@@ -9,7 +9,7 @@ load:                 # data to use (only for multi)
   video: false
 
 data:
-  path: /content/gdrive/MyDrive/SAM_I3A/data          # data path
+  path: data          # data path
   sequence_size: 20   # num word in sequence
   num_frames: 10      # num frames by speaker
   audio_length: 1000  # num milisecondes by speaker
