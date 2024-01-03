@@ -13,10 +13,10 @@ from src.model.basemodel import Model
 
 def forward(model: Model, data: dict[str, Tensor], task: str) -> Tensor:
     """ forward data in the model accroding the task """
-    if task != 'all':
+    if task != 'multi':
         return model.forward(data[task])
     else:
-        return model.forward(text=data['text'], audio=data['audio'], frames=data['video'])
+        return model.forward(data)
 
 
 def dict_to_device(data: dict[str, Tensor], device: torch.Tensor) -> None:

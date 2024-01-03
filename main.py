@@ -1,14 +1,10 @@
 import os
 import argparse
 from icecream import ic
-from easydict import EasyDict
 
 from config.config import load_config, find_config
 from src.train import train
 from src.test import test
-
-
-
 
 
 

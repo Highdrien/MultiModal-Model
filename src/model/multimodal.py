@@ -98,6 +98,12 @@ class MultimodalClassifier(Model):
         
         yield from self.fc1.named_parameters(prefix, recurse, remove_duplicate)
         yield from self.fc2.named_parameters(prefix, recurse, remove_duplicate)
+    
+    def to(self, device: torch.device):
+        super().to(device)
+        for model in self.basemodel.values():
+            model = model.to(device)
+        return self
         
 
 
