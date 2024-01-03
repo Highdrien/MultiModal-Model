@@ -37,6 +37,7 @@ class Metrics:
             self.metrics['f1'] = F1Score(task='binary')
     
         self.num_metrics = len(self.metrics)
+        self.metrics_name = list(self.metrics.keys())
     
     def compute(self, y_pred: Tensor, y_true: Tensor) -> np.ndarray:
         """ compute all the metrics 
@@ -73,4 +74,6 @@ if __name__ == '__main__':
 
     for i, metric_name in enumerate(metrics.metrics.keys()):
         print(f"{metric_name[:6]}\t->\t{metrics_value[i]:.3f}")
+    
+    print(metrics.metrics_name)
         
