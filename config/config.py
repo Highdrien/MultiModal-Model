@@ -1,4 +1,5 @@
 import os
+import yaml
 from typing import Dict, List, Optional
 from datetime import datetime
 from easydict import EasyDict
@@ -102,3 +103,23 @@ def test_logger(path: str, metrics: List[str], values: List[float]) -> None:
     with open(os.path.join(path, 'test_log.txt'), 'a') as f:
         for i in range(len(metrics)):
             f.write(metrics[i] + ': ' + str(values[i]) + '\n')
+
+
+def load_config(path: str='config/config.yaml') -> EasyDict:
+    """ Load a yaml into an EasyDict"""
+    stream = open(path, 'r')
+    return EasyDict(yaml.safe_load(stream))
+
+
+def find_config(experiment_path: str) -> str:
+    """ find the .yaml file in a folder and return the .yaml path """
+    yaml_in_path = list(filter(lambda x: x[-5:] == '.yaml', os.listdir(experiment_path)))
+
+    if len(yaml_in_path) == 1:
+        return os.path.join(experiment_path, yaml_in_path[0])
+
+    if len(yaml_in_path) == 0:
+        raise FileNotFoundError("ERROR: config.yaml wasn't found in", experiment_path)
+    
+    if len(yaml_in_path) > 0:
+        raise FileNotFoundError("ERROR: a lot a .yaml was found in", experiment_path)
