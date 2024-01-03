@@ -8,27 +8,23 @@ from easydict import EasyDict
 from os.path import dirname as up
 
 import torch
-from torch import Tensor
 from torch.optim.lr_scheduler import MultiStepLR
 
 sys.path.append(up(os.path.abspath(__file__)))
 sys.path.append(up(up(os.path.abspath(__file__))))
 
 from src.metrics import Metrics
-from src.model.basemodel import Model
 from src.model.get_model import get_model
 from src.dataloader.dataloader import create_dataloader
 from utils.plot_learning_curves import save_learning_curves
+from utils import utils
 from config.config import train_logger, train_step_logger
 
 
 def train(config: EasyDict) -> None:
 
     # Use gpu or cpu
-    if torch.cuda.is_available() and config.learning.device == 'cuda':
-        device = torch.device("cuda")
-    else:
-        device = torch.device("cpu")
+    device = utils.get_device(device_config=config.learning.device)
     ic(device)
 
     # Get data
@@ -75,9 +71,9 @@ def train(config: EasyDict) -> None:
         # Training
         for i, (data, y_true) in enumerate(train_range):
 
-            dict_to_device(data, device)
+            utils.dict_to_device(data, device)
             y_true = y_true.to(device)
-            y_pred = forward(model=model, data=data, task=config.task)
+            y_pred = utils.forward(model=model, data=data, task=config.task)
                 
             loss = criterion(y_pred, y_true)
 
@@ -105,9 +101,9 @@ def train(config: EasyDict) -> None:
             
             for i, (data, y_true) in enumerate(val_range):
                 
-                dict_to_device(data, device)
+                utils.dict_to_device(data, device)
                 y_true = y_true.to(device)
-                y_pred = forward(model=model, data=data, task=config.task)
+                y_pred = utils.forward(model=model, data=data, task=config.task)
                     
                 loss = criterion(y_pred, y_true)                
                 val_loss += loss.item()
@@ -149,24 +145,6 @@ def train(config: EasyDict) -> None:
 
     if save_experiment and config.learning.save_learning_curves:
         save_learning_curves(logging_path)
-
-
-def forward(model: Model, data: dict[str, Tensor], task: str) -> Tensor:
-    """ forward data in the model accroding the task """
-    if task != 'all':
-        return model.forward(data[task])
-    else:
-        return model.forward(text=data['text'], audio=data['audio'], frames=data['video'])
-
-    
-
-def dict_to_device(data: dict[str, Tensor], device: torch.Tensor) -> None:
-    """ load all the data.values in the device """
-    for key in data.keys():
-        data[key] = data[key].to(device)
-    
-
-
 
 
 
