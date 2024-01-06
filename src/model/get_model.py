@@ -1,5 +1,14 @@
+import os
+import sys
 from easydict import EasyDict
+from os.path import dirname as up
 
+sys.path.append(up(os.path.abspath(__file__)))
+sys.path.append(up(up(os.path.abspath(__file__))))
+sys.path.append(up(up(up(os.path.abspath(__file__)))))
+
+
+from utils import utils
 from model.basemodel import Model
 from model import bert, lstm, wave2vec, multimodal
 
@@ -30,21 +39,24 @@ def get_model(config: EasyDict) -> Model:
     
     if config.task == 'multi':
         basemodel = {}
-        if config.load.text:
+        if config.load.text[0]:
             text = bert.BertClassifier(hidden_size=config.model.text.hidden_size,
                                        pretrained_model_name=config.model.text.pretrained_model_name,
                                        last_layer=False)
+            utils.load_weigth(text, logging_path=config.load.text[1])
             basemodel['text'] = text
         
-        if config.load.audio:
+        if config.load.audio[0]:
             audio = wave2vec.Wav2Vec2Classifier(pretrained_model_name=config.model.audio.pretrained_model_name,
                                                 last_layer=False)
+            utils.load_weigth(audio, logging_path=config.load.audio[1])
             basemodel['audio'] = audio
         
-        if config.load.video:
+        if config.load.video[0]:
             video = lstm.LSTMClassifier(num_features=config.data.num_features,
                                         hidden_size=config.model.video.hidden_size,
                                         last_layer=False)
+            utils.load_weigth(video, logging_path=config.load.video[1])
             basemodel['video'] = video
         
         model = multimodal.MultimodalClassifier(basemodel=basemodel,

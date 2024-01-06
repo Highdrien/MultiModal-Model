@@ -83,21 +83,22 @@ class MultimodalClassifier(Model):
         x = self.fc2(x)
         return x
 
-    def parameters(self, recurse: bool = True) -> Iterator[Parameter]:
-        if recurse:
-            for model in self.basemodel.values():
-                yield from model.parameters(recurse)
+    # def parameters(self, recurse: bool = True) -> Iterator[Parameter]:
+    #     if recurse:
+    #         for model in self.basemodel.values():
+    #             yield from model.parameters(recurse)
         
-        yield from self.fc1.parameters(recurse)
-        yield from self.fc2.parameters(recurse)
+    #     yield from self.fc1.parameters(recurse)
+    #     yield from self.fc2.parameters(recurse)
     
     def named_parameters(self, prefix: str = '', recurse: bool = True, remove_duplicate: bool = True) -> Iterator[Tuple[str, Parameter]]:
         if recurse:
             for model in self.basemodel.values():
                 yield from model.named_parameters(prefix, recurse, remove_duplicate)
         
-        yield from self.fc1.named_parameters(prefix, recurse, remove_duplicate)
-        yield from self.fc2.named_parameters(prefix, recurse, remove_duplicate)
+        yield from super().named_parameters(prefix, True, remove_duplicate)
+        # yield from self.fc1.named_parameters(prefix, recurse, remove_duplicate)
+        # yield from self.fc2.named_parameters(prefix, recurse, remove_duplicate)
     
     def to(self, device: torch.device):
         super().to(device)
@@ -126,26 +127,30 @@ if __name__ == '__main__':
     model = get_model(config)
     ic(model)
 
-    text = torch.randint(0, 100, (BATCH_SIZE, SEQUENCE_SIZE))
-    audio = torch.rand((BATCH_SIZE, AUDIO_SIZE, 2))
-    frames = torch.rand((BATCH_SIZE, VIDEO_SIZE, NUM_FEATURES, 2))
+    # text = torch.randint(0, 100, (BATCH_SIZE, SEQUENCE_SIZE))
+    # audio = torch.rand((BATCH_SIZE, AUDIO_SIZE, 2))
+    # frames = torch.rand((BATCH_SIZE, VIDEO_SIZE, NUM_FEATURES, 2))
 
-    ic(text.shape, text.dtype)
-    ic(audio.shape, audio.dtype)
-    ic(frames.shape, frames.dtype)
+    # ic(text.shape, text.dtype)
+    # ic(audio.shape, audio.dtype)
+    # ic(frames.shape, frames.dtype)
 
-    data = {'text': text,
-            'video': frames,
-            'audio': audio}
+    # data = {'text': text,
+    #         'video': frames,
+    #         'audio': audio}
 
-    y = model.forward(data)
-    ic(y.shape, y.dtype)
+    # y = model.forward(data)
+    # ic(y.shape, y.dtype)
 
-    print('\nname and param with recure True')
-    for name, param in model.named_parameters(recurse=True):
-        print(name, param.shape)
+    # print('\nname and param with recure True')
+    # for name, param in model.named_parameters(recurse=True):
+    #     print(name, param.shape)
     
     print('\nname and param with recure False')
     for name, param in model.named_parameters(recurse=False):
+        print(name, param.shape)
+    
+    print('\nget learned parameter')
+    for name, param in model.get_only_learned_parameters().items():
         print(name, param.shape)
 

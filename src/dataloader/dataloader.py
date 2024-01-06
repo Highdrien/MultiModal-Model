@@ -107,11 +107,13 @@ def create_dataloader(mode: str, config: dict) -> DataLoader:
     assert mode in ['train', 'val', 'test'], f"mode must be train, val or test but is '{mode}'"
 
     if config.task != 'multi':
-        config.load = dict(map(lambda x: (x, config.task == x), ['text', 'audio', 'video']))
+        load = dict(map(lambda x: (x, config.task == x), ['text', 'audio', 'video']))
+    else:
+        load = dict(map(lambda x: (x[0], x[1][0]), config.load.items()))
 
     generator = DataGenerator(mode=mode,
                               data_path=config.data.path,
-                              load=config.load, 
+                              load=load, 
                               sequence_size=config.data.sequence_size,
                               audio_size=config.data.audio_length,
                               video_size=config.data.num_frames)

@@ -4,9 +4,9 @@ save_experiment: true
 logs: logs
 
 load:                 # data to use (only for multi)
-  text: true
-  audio: true
-  video: false
+  text: [true, logs/text_0]
+  audio: [true, logs/audio_0]
+  video: [false, null]
 
 data:
   path: data          # data path
@@ -28,13 +28,13 @@ model:
     hidden_size: 100
   
   multi:
-    hidden_size: 100
+    hidden_size: 128
     freeze_basemodel: true
   
 learning:
   learning_rate: 0.01
   batch_size: 16
-  epochs: 30
+  epochs: 3
   device: cuda
   milesstone: [5, 15]         # gradient decay at epoch 5 and 15
   gamma: 0.1                  # learning rate will be multiplicate by 0.1 at epochs 5 and 15

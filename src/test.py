@@ -31,6 +31,7 @@ def test(config: EasyDict, logging_path: str) -> None:
 
     # Get model
     model = get_model(config)
+    utils.load_weigth(model, logging_path)
     model = model.to(device)
     ic(model)
     ic(model.get_number_parameters())
@@ -49,6 +50,7 @@ def test(config: EasyDict, logging_path: str) -> None:
     test_range = tqdm(test_generator)
     test_metrics = np.zeros(metrics.num_metrics + 1)
 
+    model.eval()
     with torch.no_grad():
         for i, (data, y_true) in enumerate(test_range):
 

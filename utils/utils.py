@@ -32,3 +32,10 @@ def get_device(device_config: str) -> torch.device:
     else:
         device = torch.device("cpu")
     return device
+
+def load_weigth(model: torch.nn.Module, logging_path: str) -> None:
+    checkpoint_path = os.path.join(logging_path, 'checkpoint.pt')
+    if not os.path.isfile(checkpoint_path):
+        raise FileNotFoundError(f'Error: model weight was not found in {checkpoint_path}')
+    problem = model.load_state_dict(torch.load(checkpoint_path), strict=False)
+    print(problem)

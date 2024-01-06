@@ -69,6 +69,7 @@ def train(config: EasyDict) -> None:
         train_metrics = np.zeros(metrics.num_metrics)
 
         # Training
+        model.train()
         for i, (data, y_true) in enumerate(train_range):
 
             utils.dict_to_device(data, device)
@@ -96,7 +97,8 @@ def train(config: EasyDict) -> None:
         val_loss = 0
         val_range = tqdm(val_generator)
         val_metrics = np.zeros(metrics.num_metrics)
-
+        
+        model.eval()
         with torch.no_grad():
             
             for i, (data, y_true) in enumerate(val_range):
