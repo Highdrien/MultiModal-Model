@@ -44,11 +44,12 @@ class BertClassifier(BaseModel):
         output_shape: (B, C) or (B, hidden_size)    dtype: torch.float32
         """
         outputs = self.bert(x, attention_mask=attention_mask)
-        pooled_output = outputs.last_hidden_state[:,0,:]
-        pooled_output = self.dropout(pooled_output)
-        logits = self.fc(pooled_output)
+        x = outputs.last_hidden_state[:,0,:]
+        x = self.relu(x)
+        logits = self.fc(x)
 
         if self.last_layer:
+            x = self.relu(self.dropout(x))
             logits = self.forward_last_layer(x=logits)
         
         return logits
