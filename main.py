@@ -30,7 +30,6 @@ def main(options: dict) -> None:
             logging_path = train_logger(config=config, write_train_log=False)
             config.task = 'multi'
             ic(logging_path)
-            exit()
             test(config=config,
                  logging_path=logging_path)
         
