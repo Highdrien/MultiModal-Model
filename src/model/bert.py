@@ -49,7 +49,7 @@ class BertClassifier(BaseModel):
         logits = self.fc(x)
 
         if self.last_layer:
-            x = self.relu(self.dropout(x))
+            x = self.dropout(x)
             logits = self.forward_last_layer(x=logits)
         
         return logits
