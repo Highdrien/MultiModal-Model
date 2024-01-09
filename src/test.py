@@ -31,7 +31,8 @@ def test(config: EasyDict, logging_path: str) -> None:
 
     # Get model
     model = get_model(config)
-    utils.load_weigth(model, logging_path)
+    if not utils.is_model_likelihood(config):
+        utils.load_weigth(model, logging_path)
     model = model.to(device)
     ic(model)
     ic(model.get_number_parameters())
@@ -72,6 +73,9 @@ def test(config: EasyDict, logging_path: str) -> None:
     # Save Scores in logs                                             #
     ###################################################################
     test_metrics = test_metrics / n_test
+
+    for i in range(len(metrics.metrics_name)):
+        print(f'{metrics.metrics_name[i]}\t: {test_metrics[i + 1]}')
     
     test_logger(path=logging_path,
                 metrics=[config.learning.loss] + metrics.metrics_name,

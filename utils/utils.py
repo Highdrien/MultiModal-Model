@@ -52,3 +52,8 @@ def load_config_from_folder(path: str) -> EasyDict:
     
     stream = open(file, 'r')
     return EasyDict(yaml.safe_load(stream))
+
+
+def is_model_likelihood(config: EasyDict) -> bool:
+     """ test if the configuration is a likelihood model """
+     return config.task == 'multi' and config.model.multi.likelihood

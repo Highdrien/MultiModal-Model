@@ -2,9 +2,10 @@ import os
 import argparse
 from icecream import ic
 
-from config.config import load_config, find_config
+from config.config import load_config, find_config, train_logger
 from src.train import train
 from src.test import test
+from utils import utils
 
 
 
@@ -14,20 +15,32 @@ def main(options: dict) -> None:
 
     if options['mode'] not in IMPLEMENTED:
         raise ValueError(f"Expected mode must in {IMPLEMENTED} but found {options['mode']}")
+    
+    config = load_config(options['config_path'])
 
     if options['mode'] == 'train':
-        config = load_config(options['config_path'])
         if options['task'] is not None:
             config.task = options['task']
         ic(config)
         train(config)
     
     if options['mode'] == 'test':
-        if options['path'] is None:
-            raise ValueError(f'you must specify the path of the experiment that you want to test')
-        config = load_config(find_config(experiment_path=options['path']))
-        ic(config)
-        test(config, logging_path=options['path'])
+        if options['path'] is None and utils.is_model_likelihood(config):
+            config.task = 'likelihood'
+            logging_path = train_logger(config=config, write_train_log=False)
+            config.task = 'multi'
+            ic(logging_path)
+            exit()
+            test(config=config,
+                 logging_path=logging_path)
+        
+        elif options['path'] is None:
+            raise ValueError(f'you must specify the path of the experiment that you want to test, or use a likelihood config')
+
+        else:
+            config = load_config(find_config(experiment_path=options['path']))
+            ic(config)
+            test(config, logging_path=options['path'])
     
     if options['mode'] == 'baseline':
         config = load_config(options['config_path'])

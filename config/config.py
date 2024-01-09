@@ -18,7 +18,9 @@ def number_folder(path: str, name: str) -> str:
     return name + str(last_index + 1)
 
 
-def train_logger(config: EasyDict) -> str:
+def train_logger(config: EasyDict,
+                 write_train_log: bool=True,
+                 copy_config: bool=True) -> str:
     """
     creates a logs folder where we can find the config in confing.yaml and
     create train_log.csv which will contain the loss and metrics values
@@ -31,24 +33,26 @@ def train_logger(config: EasyDict) -> str:
     os.mkdir(path)
     print(f'{path = }')
 
-    # create train_log.csv where save the metrics
-    with open(os.path.join(path, 'train_log.csv'), 'w') as f:
-        first_line = 'step,' + config.learning.loss + ',val ' + config.learning.loss
-        if 'metrics' in config.keys():
-            for metric in list(filter(lambda x: config.metrics[x], config.metrics)):
-                first_line += ',' + metric
-                first_line += ',val ' + metric
-        f.write(first_line + '\n')
-    f.close()
+    if write_train_log:
+        # create train_log.csv where save the metrics
+        with open(os.path.join(path, 'train_log.csv'), 'w') as f:
+            first_line = 'step,' + config.learning.loss + ',val ' + config.learning.loss
+            if 'metrics' in config.keys():
+                for metric in list(filter(lambda x: config.metrics[x], config.metrics)):
+                    first_line += ',' + metric
+                    first_line += ',val ' + metric
+            f.write(first_line + '\n')
+        f.close()
 
-    # copy the config
-    with open(os.path.join(path, 'config.yaml'), 'w') as f:
-        now = datetime.now()
-        date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-        f.write("config_metadata: 'Saving time : " + date_time + "'\n")
-        for line in config_to_yaml(config):
-            f.write(line + '\n')
-    f.close()
+    if copy_config:
+        # copy the config
+        with open(os.path.join(path, 'config.yaml'), 'w') as f:
+            now = datetime.now()
+            date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+            f.write("config_metadata: 'Saving time : " + date_time + "'\n")
+            for line in config_to_yaml(config):
+                f.write(line + '\n')
+        f.close()
 
     return path
 

@@ -29,6 +29,7 @@ model:
     video:
         hidden_size: 100
     multi:
+        likelihood: false
         hidden_size: 128
         freeze_basemodel: true
 

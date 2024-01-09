@@ -28,6 +28,7 @@ model:
     hidden_size: 100
   
   multi:
+    likelihood: true
     hidden_size: 128
     freeze_basemodel: true
   
