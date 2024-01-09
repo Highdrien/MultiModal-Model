@@ -4,7 +4,7 @@ save_experiment: true
 logs: logs
 
 load:                 # data to use (only for multi)
-  text: [true, logs/text_0]
+  text: [true, logs/text_1]
   audio: [true, logs/audio_0]
   video: [false, null]
 
