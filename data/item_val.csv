@@ -2763,7 +2763,6 @@ data\transcr\RPABN_merge.csv,679,1123.787,True,data\video\openface\paco_RPABN_RP
 data\transcr\RPABN_merge.csv,680,1122.11,False,data\video\openface\paco_RPABN_RPA.csv,28053,data\video\openface\paco_RPABN_BN.csv,28053,data\audio\2_channels\RPA_BN.wav,2762
 data\transcr\RPABN_merge.csv,681,1127.2,False,data\video\openface\paco_RPABN_RPA.csv,28170,data\video\openface\paco_RPABN_BN.csv,28170,data\audio\2_channels\RPA_BN.wav,2763
 data\transcr\RPABN_merge.csv,682,1126.79,False,data\video\openface\cheese_LPMA_LP.csv,33,data\video\openface\cheese_LPMA_MA.csv,33,data\audio\2_channels\RPA_BN.wav,2764
-data\transcr\LPMA_merge.csv,0,1.31,False,data\video\openface\cheese_LPMA_LP.csv,70,data\video\openface\cheese_LPMA_MA.csv,70,data\audio\2_channels\LP_MA.wav,2765
 data\transcr\LPMA_merge.csv,1,2.765,True,data\video\openface\cheese_LPMA_LP.csv,115,data\video\openface\cheese_LPMA_MA.csv,115,data\audio\2_channels\LP_MA.wav,2766
 data\transcr\LPMA_merge.csv,2,4.595,False,data\video\openface\cheese_LPMA_LP.csv,231,data\video\openface\cheese_LPMA_MA.csv,231,data\audio\2_channels\LP_MA.wav,2767
 data\transcr\LPMA_merge.csv,3,9.235,False,data\video\openface\cheese_LPMA_LP.csv,303,data\video\openface\cheese_LPMA_MA.csv,303,data\audio\2_channels\LP_MA.wav,2768

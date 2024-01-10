@@ -1271,7 +1271,6 @@ data\transcr\AAOR_merge.csv,601,969.77,False,data\video\openface\cheese_AAOR_AA.
 data\transcr\AAOR_merge.csv,602,971.16,False,data\video\openface\cheese_AAOR_AA.csv,24279,data\video\openface\cheese_AAOR_OR.csv,24279,data\audio\2_channels\AA_OR.wav,1269
 data\transcr\AAOR_merge.csv,603,970.47,False,data\video\openface\cheese_AAOR_AA.csv,24262,data\video\openface\cheese_AAOR_OR.csv,24262,data\audio\2_channels\AA_OR.wav,1270
 data\transcr\AAOR_merge.csv,604,972.99,False,data\video\openface\cheese_AAOR_AA.csv,24325,data\video\openface\cheese_AAOR_OR.csv,24325,data\audio\2_channels\AA_OR.wav,1271
-data\transcr\PREM_merge.csv,0,1.445,False,data\video\openface\cheese_PREM_PR.csv,37,data\video\openface\cheese_PREM_EM.csv,37,data\audio\2_channels\PR_EM.wav,1272
 data\transcr\PREM_merge.csv,1,2.63,False,data\video\openface\cheese_PREM_PR.csv,66,data\video\openface\cheese_PREM_EM.csv,66,data\audio\2_channels\PR_EM.wav,1273
 data\transcr\PREM_merge.csv,2,3.895,False,data\video\openface\cheese_PREM_PR.csv,98,data\video\openface\cheese_PREM_EM.csv,98,data\audio\2_channels\PR_EM.wav,1274
 data\transcr\PREM_merge.csv,3,11.535,False,data\video\openface\cheese_PREM_PR.csv,289,data\video\openface\cheese_PREM_EM.csv,289,data\audio\2_channels\PR_EM.wav,1275
@@ -3995,7 +3994,6 @@ data\transcr\FBCB_merge.csv,603,1108.17,False,data\video\openface\cheese_FBCB_FB
 data\transcr\FBCB_merge.csv,604,1108.995,False,data\video\openface\cheese_FBCB_FB.csv,27938,data\video\openface\cheese_FBCB_CB.csv,27938,data\audio\2_channels\FB_CB.wav,3993
 data\transcr\FBCB_merge.csv,605,1113.22,False,data\video\openface\paco_JDSLS_JDS.csv,38,data\video\openface\paco_JDSLS_LS.csv,38,data\audio\2_channels\FB_CB.wav,3994
 data\transcr\FBCB_merge.csv,606,1117.505,False,data\video\openface\paco_JDSLS_JDS.csv,67,data\video\openface\paco_JDSLS_LS.csv,67,data\audio\2_channels\FB_CB.wav,3995
-data\transcr\JDSLS_merge.csv,0,1.52,True,data\video\openface\paco_JDSLS_JDS.csv,113,data\video\openface\paco_JDSLS_LS.csv,113,data\audio\2_channels\JDS_LS.wav,3996
 data\transcr\JDSLS_merge.csv,1,2.645,False,data\video\openface\paco_JDSLS_JDS.csv,229,data\video\openface\paco_JDSLS_LS.csv,229,data\audio\2_channels\JDS_LS.wav,3997
 data\transcr\JDSLS_merge.csv,2,4.495,False,data\video\openface\paco_JDSLS_JDS.csv,297,data\video\openface\paco_JDSLS_LS.csv,297,data\audio\2_channels\JDS_LS.wav,3998
 data\transcr\JDSLS_merge.csv,3,9.14,False,data\video\openface\paco_JDSLS_JDS.csv,375,data\video\openface\paco_JDSLS_LS.csv,375,data\audio\2_channels\JDS_LS.wav,3999
@@ -4589,7 +4587,6 @@ data\transcr\JDSLS_merge.csv,590,1053.76,True,data\video\openface\paco_JDSLS_JDS
 data\transcr\JDSLS_merge.csv,591,1054.425,False,data\video\openface\paco_POMH_PO.csv,36,data\video\openface\paco_POMH_MH.csv,36,data\audio\2_channels\JDS_LS.wav,4587
 data\transcr\JDSLS_merge.csv,592,1054.705,False,data\video\openface\paco_POMH_PO.csv,340,data\video\openface\paco_POMH_MH.csv,340,data\audio\2_channels\JDS_LS.wav,4588
 data\transcr\JDSLS_merge.csv,593,1056.52,False,data\video\openface\paco_POMH_PO.csv,427,data\video\openface\paco_POMH_MH.csv,427,data\audio\2_channels\JDS_LS.wav,4589
-data\transcr\POMH_merge.csv,0,1.42,True,data\video\openface\paco_POMH_PO.csv,556,data\video\openface\paco_POMH_MH.csv,556,data\audio\2_channels\PO_MH.wav,4590
 data\transcr\POMH_merge.csv,1,13.6,False,data\video\openface\paco_POMH_PO.csv,656,data\video\openface\paco_POMH_MH.csv,656,data\audio\2_channels\PO_MH.wav,4591
 data\transcr\POMH_merge.csv,2,17.075,False,data\video\openface\paco_POMH_PO.csv,801,data\video\openface\paco_POMH_MH.csv,801,data\audio\2_channels\PO_MH.wav,4592
 data\transcr\POMH_merge.csv,3,22.24,False,data\video\openface\paco_POMH_PO.csv,910,data\video\openface\paco_POMH_MH.csv,910,data\audio\2_channels\PO_MH.wav,4593
@@ -5334,7 +5331,6 @@ data\transcr\POMH_merge.csv,741,1118.5,False,data\video\openface\paco_MLHE_ML.cs
 data\transcr\POMH_merge.csv,742,1119.21,True,data\video\openface\paco_MLHE_ML.csv,123,data\video\openface\paco_MLHE_HE.csv,123,data\audio\2_channels\PO_MH.wav,5332
 data\transcr\POMH_merge.csv,743,1119.56,False,data\video\openface\paco_MLHE_ML.csv,221,data\video\openface\paco_MLHE_HE.csv,221,data\audio\2_channels\PO_MH.wav,5333
 data\transcr\POMH_merge.csv,744,1119.56,False,data\video\openface\paco_MLHE_ML.csv,200,data\video\openface\paco_MLHE_HE.csv,200,data\audio\2_channels\PO_MH.wav,5334
-data\transcr\MLHE_merge.csv,0,1.25,True,data\video\openface\paco_MLHE_ML.csv,255,data\video\openface\paco_MLHE_HE.csv,255,data\audio\2_channels\ML_HE.wav,5335
 data\transcr\MLHE_merge.csv,1,3.58,False,data\video\openface\paco_MLHE_ML.csv,279,data\video\openface\paco_MLHE_HE.csv,279,data\audio\2_channels\ML_HE.wav,5336
 data\transcr\MLHE_merge.csv,2,4.895,False,data\video\openface\paco_MLHE_ML.csv,344,data\video\openface\paco_MLHE_HE.csv,344,data\audio\2_channels\ML_HE.wav,5337
 data\transcr\MLHE_merge.csv,3,8.83,True,data\video\openface\paco_MLHE_ML.csv,376,data\video\openface\paco_MLHE_HE.csv,376,data\audio\2_channels\ML_HE.wav,5338
@@ -6065,7 +6061,6 @@ data\transcr\MLHE_merge.csv,727,1257.97,False,data\video\openface\paco_BECR_BE.c
 data\transcr\MLHE_merge.csv,728,1259.06,False,data\video\openface\paco_BECR_BE.csv,89,data\video\openface\paco_BECR_CR.csv,89,data\audio\2_channels\ML_HE.wav,6063
 data\transcr\MLHE_merge.csv,729,1261.105,False,data\video\openface\paco_BECR_BE.csv,139,data\video\openface\paco_BECR_CR.csv,139,data\audio\2_channels\ML_HE.wav,6064
 data\transcr\MLHE_merge.csv,730,1262.64,False,data\video\openface\paco_BECR_BE.csv,255,data\video\openface\paco_BECR_CR.csv,255,data\audio\2_channels\ML_HE.wav,6065
-data\transcr\BECR_merge.csv,0,1.735,True,data\video\openface\paco_BECR_BE.csv,275,data\video\openface\paco_BECR_CR.csv,275,data\audio\2_channels\BE_CR.wav,6066
 data\transcr\BECR_merge.csv,2,2.97,False,data\video\openface\paco_BECR_BE.csv,470,data\video\openface\paco_BECR_CR.csv,470,data\audio\2_channels\BE_CR.wav,6068
 data\transcr\BECR_merge.csv,3,3.56,False,data\video\openface\paco_BECR_BE.csv,544,data\video\openface\paco_BECR_CR.csv,544,data\audio\2_channels\BE_CR.wav,6069
 data\transcr\BECR_merge.csv,4,5.525,False,data\video\openface\paco_BECR_BE.csv,674,data\video\openface\paco_BECR_CR.csv,674,data\audio\2_channels\BE_CR.wav,6070
@@ -6589,7 +6584,6 @@ data\transcr\BECR_merge.csv,521,1029.335,False,data\video\openface\paco_ASEP_AS.
 data\transcr\BECR_merge.csv,522,1030.6,True,data\video\openface\paco_ASEP_AS.csv,660,data\video\openface\paco_ASEP_EP.csv,660,data\audio\2_channels\BE_CR.wav,6588
 data\transcr\BECR_merge.csv,523,1034.81,False,data\video\openface\paco_ASEP_AS.csv,844,data\video\openface\paco_ASEP_EP.csv,844,data\audio\2_channels\BE_CR.wav,6589
 data\transcr\BECR_merge.csv,524,1036.36,False,data\video\openface\paco_ASEP_AS.csv,924,data\video\openface\paco_ASEP_EP.csv,924,data\audio\2_channels\BE_CR.wav,6590
-data\transcr\ASEP_merge.csv,0,1.875,True,data\video\openface\paco_ASEP_AS.csv,1019,data\video\openface\paco_ASEP_EP.csv,1019,data\audio\2_channels\AS_EP.wav,6591
 data\transcr\ASEP_merge.csv,1,3.502,False,data\video\openface\paco_ASEP_AS.csv,1205,data\video\openface\paco_ASEP_EP.csv,1205,data\audio\2_channels\AS_EP.wav,6592
 data\transcr\ASEP_merge.csv,2,15.74,False,data\video\openface\paco_ASEP_AS.csv,1311,data\video\openface\paco_ASEP_EP.csv,1311,data\audio\2_channels\AS_EP.wav,6593
 data\transcr\ASEP_merge.csv,3,21.895,False,data\video\openface\paco_ASEP_AS.csv,1479,data\video\openface\paco_ASEP_EP.csv,1479,data\audio\2_channels\AS_EP.wav,6594
