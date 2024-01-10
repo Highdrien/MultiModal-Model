@@ -41,9 +41,9 @@ python main.py --mode train --config_path config/my_config.yaml
 Example for testing:
     
 ```sh
-python main.py --mode test --path config/my_config.yaml
+python main.py --mode test --path logs/multi_0
 ```
-Replace `config/my_config.yaml` with the path to your configuration file. For exemple `logs/multi_0`.
+Replace `logs/multi_0` with the path to your configuration file. For exemple `logs/text_0` if you want to test the text model alone.
 
 
 
