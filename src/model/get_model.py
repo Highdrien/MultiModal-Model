@@ -29,7 +29,8 @@ def get_model(config: EasyDict) -> Model:
     if config.task == 'audio':
         model = wave2vec.Wav2Vec2Classifier(pretrained_model_name=cfg_model.pretrained_model_name,
                                             last_layer=True,
-                                            num_classes=config.data.num_classes)
+                                            num_classes=config.data.num_classes,
+                                            audio_length=config.data.audio_length)
     
     if config.task == 'video':
         model = lstm.LSTMClassifier(num_features=config.data.num_features,
@@ -50,7 +51,8 @@ def get_model(config: EasyDict) -> Model:
         if config.load.audio[0]:
             audio_config = utils.load_config_from_folder(path=config.load.audio[1])
             audio = wave2vec.Wav2Vec2Classifier(pretrained_model_name=audio_config.model.audio.pretrained_model_name,
-                                                last_layer=True)
+                                                last_layer=True,
+                                                audio_length=audio_config.data.audio_length)
             utils.load_weigth(audio, logging_path=config.load.audio[1])
             basemodel['audio'] = audio
         

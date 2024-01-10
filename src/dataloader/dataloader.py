@@ -80,10 +80,9 @@ class DataGenerator(Dataset):
             text = self.tokenizer(text)['input_ids'][:self.sequence_size]
 
             if len(text) < self.sequence_size:
-                error_message = f'text must be have more than {self.sequence_size} elements, but found only {len(text)} elements.'
-                error_message += f"\n the file is: {line['text_filepath']} in the line (ipu)={line['ipu_id']}. Number line to load is {self.num_line_to_load_for_text}.\n"
-                error_message += f"\n {self.mode = }, {index = }"
-                raise ValueError(error_message)
+                raise ValueError(f'text must be have more than {self.sequence_size} elements, but found only {len(text)} elements.\n'
+                                 f"the file is: {line['text_filepath']} in the line (ipu)={line['ipu_id']}. Number line to load is {self.num_line_to_load_for_text}.\n"
+                                 f"{self.mode = }, {index = }")
             
             text = torch.tensor(text)
             data['text'] = text
@@ -91,6 +90,10 @@ class DataGenerator(Dataset):
         if self.load['audio']:
             audio = get_data.get_audio_sf(info=line, audio_length=self.audio_size)
             data['audio'] = audio
+
+            if audio.shape != (self.audio_size, 2):
+                raise ValueError(f'audio shape expected {(self.audio_size, 2)} but found {audio.shape}.\n'
+                                 f'Change the audio size or remove the item {line["item"]} in item_{self.mode}.csv')
 
         if self.load['video']:
             s0 = get_data.get_frame(info=line, video_size=self.video_size, speaker=0)
@@ -144,3 +147,15 @@ if __name__ == '__main__':
     print('audio shape:', data['audio'].shape)
     print('video shape:', data['video'].shape)
     print('label shape:', label.shape)
+
+    # for mode in ['train', 'val', 'test']:
+
+    #     generator = DataGenerator(mode=mode,
+    #                               data_path='data', 
+    #                               load={'audio': True, 'text': False, 'video': False},
+    #                               audio_size=2000,
+    #                               sequence_size=20,
+    #                               video_size=10)
+        
+    #     for i in range(len(generator)):
+    #         generator.__getitem__(index=i)
