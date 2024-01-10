@@ -11,6 +11,18 @@
 \usepackage{todonotes} 
 \usepackage{float}      % pour les figures
 
+% \usepackage[style=ieee]{biblatex}
+% \addbibresource{ref.bib}
+% \bibliography{ref.bib}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,   % Couleur des liens internes (table des matières, références)
+    citecolor=green,  % Couleur des liens vers les références bibliographiques
+    filecolor=magenta,% Couleur des liens vers les fichiers
+    urlcolor=blue     % Couleur des liens vers les URL
+}
+
 \title{Rapport SAM \\ Modèle multi-modaux}
 \author{Cléa Han, Yanis Labeyrie et Adrien Zabban}
 \date{janvier 2024}
@@ -65,6 +77,7 @@ La figure \ref{fig: model_text} résume l'architecture de ce modèle.
 
 \subsection{Traitement de l'audio}
 
+\cite{DBLP:journals/corr/abs-2006-11477}
 Afin de détecter les changements de parole dans des données audio, nous avons choisi d'exploiter une approche similaire en utilisant un modèle avancé dans le domaine de la représentation audio : le modèle Wave2Vec. Wave2Vec, basé sur les Transformers, s'est établi comme une référence pour la tâche de traitement du signal audio, en particulier pour la détection des variations dans la parole. Grâce à sa capacité à encoder de manière bidirectionnelle les représentations des signaux sonores, Wave2Vec excelle dans la compréhension des nuances acoustiques et des transitions subtiles entre les locuteurs. 
 
 On possède deux données en entrée qui sont les enregistrements audio des deux interlocuteurs. On fait alors passer leurs audio dans Wave2Vec puis l'on concatène la sortie. On fait alors passer la concaténation dans une couche dense pour n'avoir qu'une sortie de taille 2.
@@ -130,5 +143,8 @@ La figure \ref{fig: basique} résume l'architecture de ce modèle.
 \section{Résultats}
 
 \section{Conclusion}
+
+% \bigskip
+% \printbibliography
 
 \end{document}
