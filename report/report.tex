@@ -140,8 +140,31 @@ La figure \ref{fig: basique} résume l'architecture de ce modèle.
 
 \section{Métriques}
 
-\section{Résultats}
+\section{Results}
 
+\subsection{Multimodal}
+
+Voici le résultat obtenu pour le modèle unimodal textuel:
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{acc_multi.png}
+        \caption{Accuracy of the multimodal model (text+audio) experiment.}
+        \label{fig:multi_1_acc}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{crossentropy_multi.png}
+        \caption{Cross-entropy loss of the multimodal model (text+audio) experiment.}
+        \label{fig:multi_1_loss}
+    \end{subfigure}
+    \caption{Results of the multimodal model (text+audio) experiment.}
+    \label{fig:multi_1_results}
+\end{figure}
+
+Les graphiques de la Figure \ref{fig:multi_1_results} présentent les résultats de l'expérience multimodale. L'axe des abscisses représente le nombre d'époques, et l'axe des ordonnées représente l'exactitude du modèle pour la Figure \ref{fig:multi_1_acc} et la perte en entropie croisée pour la Figure \ref{fig:multi_1_loss}.
+D'après ces graphiques, on peut déduire que le modèle est parvenu à apprendre à prédire les changements de tour de parole en tirant parti à la fois des données textuelles et audio.
 \section{Conclusion}
 
 % \bigskip
