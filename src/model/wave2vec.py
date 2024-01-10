@@ -17,6 +17,7 @@ class Wav2Vec2Classifier(BaseModel):
                  pretrained_model_name: str='facebook/wav2vec2-large-960h',
                  last_layer: bool=True,
                  num_classes: bool=2,
+                 audio_size: int=5000
                  ) -> None:
         hidden_size = 2 * 1024
         super(Wav2Vec2Classifier, self).__init__(hidden_size * 2, last_layer, num_classes)
@@ -25,6 +26,14 @@ class Wav2Vec2Classifier(BaseModel):
 
         for param in self.model.parameters():
             param.requires_grad = False
+
+        if audio_size not in [1000, 5000]:
+            raise ValueError(f'audio_size must be 1000 or 5000, got {audio_size}')
+
+        in_features = 30720 if audio_size == 5000 else 2 * hidden_size
+        self.fc = torch.nn.Linear(in_features=in_features, out_features=hidden_size * 2)
+        self.dropout = torch.nn.Dropout(p=0.1)
+
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -49,7 +58,10 @@ class Wav2Vec2Classifier(BaseModel):
 
         x = torch.cat([x0, x1], dim=1)
 
+        x = self.fc(self.relu(x))
+
         if self.last_layer:
+            x = self.relu(self.dropout(x))
             x = self.forward_last_layer(x=x)
 
         return x
@@ -57,18 +69,18 @@ class Wav2Vec2Classifier(BaseModel):
 
 
 if __name__ == '__main__':
-    audio = torch.rand((32, 1000, 2))
+    audio = torch.rand((32, 5000, 2))
     print(f'input shape: {audio.shape}')
     
-    model = Wav2Vec2Classifier(last_layer=True, num_classes=2)
+    model = Wav2Vec2Classifier(last_layer=True, num_classes=2, audio_size=5000)
     y = model.forward(x=audio)
     print(f'output shape: {y.shape}')
 
-    device = torch.device("cuda")
-    audio = audio.to(device)
-    model = model.to(device)
-    # model.check_device()
+    # device = torch.device("cuda")
+    # audio = audio.to(device)
+    # model = model.to(device)
+    # # model.check_device()
 
-    audio = audio.to(device)
-    model.forward(x=audio)
+    # audio = audio.to(device)
+    # model.forward(x=audio)
 
