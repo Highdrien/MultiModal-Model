@@ -1,6 +1,6 @@
 name: experiment
 task: audio           # choose btw text, audio, video or multi
-save_experiment: false
+save_experiment: true
 logs: logs
 
 load:                 # data to use (only for multi)
@@ -12,7 +12,7 @@ data:
   path: data          # data path
   sequence_size: 20   # num word in sequence
   num_frames: 10      # num frames by speaker
-  audio_length: 1000  # num milisecondes by speaker
+  audio_length: 2000  # num milisecondes by speaker
   num_features: 709   # num landmarks in the frames
   num_classes: 2      # num classes
 
