@@ -13,7 +13,7 @@ data:
   sequence_size: 20   # num word in sequence
   num_frames: 10      # num frames by speaker
   audio_length: 1000  # num milisecondes by speaker
-  num_features: 709   # num landmars in the frames
+  num_features: 709   # num landmarks in the frames
   num_classes: 2      # num classes
 
 model:

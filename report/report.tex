@@ -21,22 +21,37 @@
 \section{Introduction}
 
 \section{Données}
-parler des données (d'où elles viennent)
-dire que les vidéos sont déjà pré-traités (analyse des landmarks)
-parler (et redéfinir) les IPUs
-comment sont agencées les données
-parler des problèmes (temps de chargement du csv) et comment on l'a résolu : avec des skiprows
+
+Les données proviennent d'un ensemble de données multimodales, en français, composé de 26 dyades de 15 à 20 minutes.
+Chaque dyade est composée de deux personnes qui discutent d'un sujet donné. Les données sont composées de trois modalités : la vidéo, l'audio et le texte.
+Dans le cas des vidéos, les données sont déjà pré-traitées et sont composées de landmarks du visage des deux personnes en conversation. Ces données sont des séquences de 10 images par personne, soit 20 images au total. Les données audio sont des enregistrements audio des deux interlocuteurs. Enfin, les données textuelles sont des scripts de conversation des deux interlocuteurs.
+En effet, les données sont annotées de deux manières : avec de la segmentation de la parole basée sur les silences en utilisant les IPUs et avec des scripts de conversation, qui servent eux le traitement de texte. 
+Les IPUs (Inter-Pausal Units) représentent des segments de parole séparés par des pauses de paroles et sont utilisés comme unité de parole dans l'analyse de conversations.
+Utiliser l'unité du IPU permet d'analyser la structure et le rythme de la dynamique conversationnelle. 
+
+Au-delà des fichiers audios et des fichiers textes qui sont sous leur format traditionnel respectif, 
+les données des vidéos seront traitées à travers de fichier csv qui contiennent les landmarks du visage des deux personnes en conversation. Ces fichiers csv sont composés de colonnes indicant les caractéristiques des différentes prises de paroles. 
+
+Ces données "vidéos" sous forme de fichiers csv causent une significative augmentation du temps de chargement de ces données étant donné qu'ils donnent le lien vers des ressources à charger, et ce pour chaque ligne du fichier csv. 
+Pour palier ce problème, nous avons utilisé des \textit{skiprows} afin d'en accélérer le processus et de sélectionner les données pertinentes à notre apprentissage.
 
 \section{Traitement unimodale}
 
 \subsection{Traitement du texte avec CamemBERT}
 
-Pour parvenir à détecter le changement de tour de parole dans les données textuel, nous avons choisi d'utiliser un modèle considéré comme l'état de l'art pour la tâche de classification de texte : le modèle BERT. Le modèle BERT (Bidirectional Encoder Representations from Transformers) offre une utilité significative dans la prédiction et la détection des changements de tour de parole dans un script de conversation.
+Pour parvenir à détecter le changement de tour de parole dans les données textuelles, nous avons choisi d'utiliser un modèle considéré comme l'état de l'art pour la tâche de classification de texte : le modèle BERT. Le modèle BERT (Bidirectional Encoder Representations from Transformers) offre une utilité significative dans la prédiction et la détection des changements de tour de parole dans un script de conversation.
 Par ailleurs, BERT étant un modèle comprenant un nombre important de paramètres (environ 100 millions) il est inenvisageable avec nos moyens de l'entraîner "à partir de 0". Nous avons donc opté pour l'utilisation d'un modèle pré-entrainé sur la langue Française appelé CamemBERT et nous avons gelé les poids de CamemBERT.
 
 On prend alors les données de textes qui sont une liste d'entiers, correspondant 
-à l'indice de chaque mot du tokenizer de CamemBERT. Ces données passent alors dans CamemBERT, elles ressortent avec une dimension de 768. Elles passent alors dans une activation ReLU puis une couche dense de taille 768, puis une couche de dropout (avec un taux d'oublie de $10\%$), pour enfin passer un dernier ReLU et une dernière couche dense à 2 dimensions.
+à l'indice de chaque mot du tokenizer de CamemBERT. Ces données passent alors dans CamemBERT, elles ressortent avec une dimension de 768. Elles passent alors dans une activation ReLU puis une couche dense de taille 768, puis une couche de dropout (avec un taux d'oublie de $10\%$), pour enfin passer un dernier ReLU et une dernière couche dense à 2 dimensions. 
+La figure \ref{fig: model_text} résume l'architecture de ce modèle.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Traitement_texte_SAM.png}
+    \caption{Architecure du modèle de traitement du texte}
+    \label{fig: model_text}
+\end{figure}
 
 \subsection{Traitement de l'audio}
 
@@ -44,11 +59,29 @@ Afin de détecter les changements de parole dans des données audio, nous avons 
 
 On possède deux données en entrée qui sont les enregistrements audio des deux interlocuteurs. On fait alors passer leurs audio dans Wave2Vec puis l'on concatène la sortie. On fait alors passer la concaténation dans une couche dense pour n'avoir qu'une sortie de taille 2.
 
+La figure \ref{fig: model_audio} résume l'architecture de ce modèle.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Traitement_audio_SAM.png}
+    \caption{Architecure du modèle de traitement audio}
+    \label{fig: model_audio}
+\end{figure}
+
 \subsection{Traitement de la vidéo}
 
-Pour traiter les données issues de la vidéo qui sont sous la forme des landmarks du visage des deux personnes en conversations, nous avons choisi d'utiliser un réseau de neurone adapté à cette tâche d'analyse de série temporelle : le réseau LSTM (Long-Short Term Memory). En effet, ce modèle est pertinent pour la détection du changement de locuteur, car il est capable de conserver des informations sur de longues séquences temporelles, ce qui est essentiel pour analyser les variations subtiles dans les mouvements des landmarks faciaux. 
+Pour traiter les données issues de la vidéo qui sont sous la forme des landmarks du visage des deux personnes en conversation, nous avons choisi d'utiliser un réseau de neurones adapté à cette tâche d'analyse de séries temporelles : le réseau LSTM (Long-Short Term Memory). En effet, ce modèle est pertinent pour la détection du changement de locuteur, car il est capable de conserver des informations sur de longues séquences temporelles, ce qui est essentiel pour analyser les variations subtiles dans les mouvements des landmarks faciaux. 
 
 Comme pour l'audio, la vidéo contient un ensemble de deux fois 10 images pour chacun des interlocuteurs. On les fait alors passer dans deux couches LSTM et on concatène les sorties pour ensuite les faire passer dans du relu et une couche dense de taille 2.
+
+La figure \ref{fig: model_video} résume l'architecture de ce modèle.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Traitement_video_SAM.png}
+    \caption{Architecure du modèle de traitement vidéo}
+    \label{fig: model_video}
+\end{figure}
 
 \section{Traitement multimodal}
 
@@ -56,13 +89,31 @@ Notre approche vise à maximiser l'utilisation des dépendances et complémentar
 
 Les modèles individuels sont initialement pré-entraînés, puis fusionnés en une seule architecture multimodale qui subit ensuite un nouvel entraînement. Le pré-entraînement des modèles individuels présente l'avantage de réduire le temps de convergence de l'entraînement de cette architecture multimodale comprenant un nombre important de paramètres.
 
-Au cours de ce processus, pour des raisons de contraintes de ressources, on gèle les poids des modèles unis-modale.
+Au cours de ce processus, pour des raisons de contraintes de ressources, on gèle les poids des modèles unimodales.
 
 \subsection{Maximum de vraisemblance}
 Ce premier modèle multimodal fait passer chaque donnée dans son modèle pré-entraîné associé et fait une moyenne des sorties. Le but est alors de faire une moyenne des probabilités selon chaque canal. Nous appellerons ce modèle \textit{LIKELIHOOD} du fait que le but est de maximiser la log-likelihood.
 
+La figure \ref{fig: likelihood} résume l'architecture de ce modèle.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Likelihood.png}
+    \caption{Architecure du modèle \textit{LIKELIHOOD}}
+    \label{fig: likelihood}
+\end{figure}
+
 \subsection{Apprentissage basique}
 Ce deuxième modèle plus évolué consiste à faire passer chaque donnée dans son modèle pré-entraîné associé et de récupérer l'information avant qu'elle ne passe dans la dernière couche dense (celle de taille deux). On concatène alors toute l'information et l'on la fait passer dans une grande couche dense de taille 2.
+
+La figure \ref{fig: basique} résume l'architecture de ce modèle.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{second_model.png}
+    \caption{Architecure du modèle d'apprentissage basique}
+    \label{fig: basique}
+\end{figure}
 
 \section{Métriques}
 
