@@ -9,6 +9,7 @@
 \usepackage{mathtools}  % pour rajouter \text dans un environment math
 \usepackage{subcaption} % pour les subfigures
 \usepackage{todonotes} 
+\usepackage{float}      % pour les figures
 
 \title{Rapport SAM \\ Modèle multi-modaux}
 \author{Cléa Han, Yanis Labeyrie et Adrien Zabban}
@@ -40,7 +41,16 @@ Pour palier ce problème, nous avons utilisé des \textit{skiprows} afin d'en ac
 \subsection{Traitement du texte avec CamemBERT}
 
 Pour parvenir à détecter le changement de tour de parole dans les données textuelles, nous avons choisi d'utiliser un modèle considéré comme l'état de l'art pour la tâche de classification de texte : le modèle BERT. Le modèle BERT (Bidirectional Encoder Representations from Transformers) offre une utilité significative dans la prédiction et la détection des changements de tour de parole dans un script de conversation.
-Par ailleurs, BERT étant un modèle comprenant un nombre important de paramètres (environ 100 millions) il est inenvisageable avec nos moyens de l'entraîner "à partir de 0". Nous avons donc opté pour l'utilisation d'un modèle pré-entrainé sur la langue Française appelé CamemBERT et nous avons gelé les poids de CamemBERT.
+Par ailleurs, BERT étant un modèle comprenant un nombre important de paramètres (environ 100 millions) il est inenvisageable avec nos moyens de l'entraîner "à partir de 0". Nous avons donc opté pour l'utilisation d'un modèle pré-entrainé sur la langue Française appelé CamemBERT et nous avons gelé les poids de CamemBERT.\newline
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{BERT.png}
+    \caption{Architecure du modèle BERT}
+    \label{fig: model_text} 
+\end{figure}
+
+
 
 On prend alors les données de textes qui sont une liste d'entiers, correspondant 
 à l'indice de chaque mot du tokenizer de CamemBERT. Ces données passent alors dans CamemBERT, elles ressortent avec une dimension de 768. Elles passent alors dans une activation ReLU puis une couche dense de taille 768, puis une couche de dropout (avec un taux d'oublie de $10\%$), pour enfin passer un dernier ReLU et une dernière couche dense à 2 dimensions. 
