@@ -1,6 +1,6 @@
 name: experiment
-task: multi           # choose btw text, audio, video or multi
-save_experiment: true
+task: audio           # choose btw text, audio, video or multi
+save_experiment: false
 logs: logs
 
 load:                 # data to use (only for multi)

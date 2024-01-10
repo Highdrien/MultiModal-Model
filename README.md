@@ -32,11 +32,20 @@ You can run the [`main.py`](command:_github.copilot.openRelativePath?%5B%22main.
 
 To train the model, use the [`--mode`](command:_github.copilot.openSymbolInFile?%5B%22src%2Fdataloader%2Fdataloader.py%22%2C%22--mode%22%5D "src/dataloader/dataloader.py") option with the value `train`. You can specify the path to the configuration file with the `--config_path` option. If not provided, it defaults to [`config/config.yaml`](command:_github.copilot.openRelativePath?%5B%22config%2Fconfig.yaml%22%5D "config/config.yaml").
 
-Example:
+Example for training:
 
 ```sh
 python main.py --mode train --config_path config/my_config.yaml
 ```
+
+Example for testing:
+    
+```sh
+python main.py --mode test --path logs/multi_0
+```
+Replace `logs/multi_0` with the path to your configuration file. For exemple `logs/text_0` if you want to test the text model alone.
+
+
 
 ### Data Mode
 
