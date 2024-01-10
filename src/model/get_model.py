@@ -29,8 +29,7 @@ def get_model(config: EasyDict) -> Model:
     if config.task == 'audio':
         model = wave2vec.Wav2Vec2Classifier(pretrained_model_name=cfg_model.pretrained_model_name,
                                             last_layer=True,
-                                            num_classes=config.data.num_classes,
-                                            audio_size=config.data.audio_length)
+                                            num_classes=config.data.num_classes)
     
     if config.task == 'video':
         model = lstm.LSTMClassifier(num_features=config.data.num_features,
@@ -51,8 +50,7 @@ def get_model(config: EasyDict) -> Model:
         if config.load.audio[0]:
             audio_config = utils.load_config_from_folder(path=config.load.audio[1])
             audio = wave2vec.Wav2Vec2Classifier(pretrained_model_name=audio_config.model.audio.pretrained_model_name,
-                                                last_layer=True,
-                                                audio_size=audio_config.data.audio_length)
+                                                last_layer=True)
             utils.load_weigth(audio, logging_path=config.load.audio[1])
             basemodel['audio'] = audio
         
@@ -73,3 +71,30 @@ def get_model(config: EasyDict) -> Model:
                                                     num_classes=config.data.num_classes)
     
     return model
+
+
+if __name__ == '__main__':
+    import yaml
+    from easydict import EasyDict
+    from icecream import ic 
+    import torch 
+
+    config = EasyDict(yaml.safe_load(open('config/config.yaml', mode='r')))
+    ic(config)
+
+    model = get_model(config)
+    ic(model)
+    model.train()
+    audio = torch.rand((32, 1000, 2))
+    print(f'input shape: {audio.shape}')
+    
+    y = model.forward(x=audio)
+    print(f'output shape: {y.shape}')
+
+    # device = torch.device("cuda")
+    # audio = audio.to(device)
+    # model = model.to(device)
+    # # model.check_device()
+
+    # audio = audio.to(device)
+    # model.forward(x=audio)
