@@ -21,6 +21,9 @@ from utils import utils
 from config.config import train_logger, train_step_logger
 
 
+LABEL_DISTRIBUTION = [0.8051, 0.1949]
+
+
 def train(config: EasyDict) -> None:
 
     # Use gpu or cpu
@@ -40,7 +43,8 @@ def train(config: EasyDict) -> None:
     ic(model.get_number_parameters())
     
     # Loss
-    criterion = torch.nn.CrossEntropyLoss(reduction='mean')
+    weight = torch.tensor(list(map(lambda x: 1 - x, LABEL_DISTRIBUTION)), device=device)
+    criterion = torch.nn.CrossEntropyLoss(reduction='mean', weight=weight)
 
     # Optimizer and Scheduler
     optimizer = torch.optim.Adam(model.parameters(), lr=config.learning.learning_rate)
@@ -125,6 +129,9 @@ def train(config: EasyDict) -> None:
         val_loss = val_loss / n_val
         train_metrics = train_metrics / n_train
         val_metrics = val_metrics / n_val
+
+        print(f'accuracy -> TRAIN: {train_metrics[0]:.2f}   VAL: {val_metrics[0]:.2f}')
+        print(f'f1-score -> TRAIN: {train_metrics[-1]:.2f}   VAL: {val_metrics[-1]:.2f}')
         
         if save_experiment:
             train_step_logger(path=logging_path, 
@@ -139,8 +146,8 @@ def train(config: EasyDict) -> None:
                 torch.save(model.get_only_learned_parameters(),
                            os.path.join(logging_path, 'checkpoint.pt'))
                 best_val_loss = val_loss
-        
-            ic(best_val_loss)     
+
+            print(f'{best_val_loss = }')
 
     stop_time = time.time()
     print(f"training time: {stop_time - start_time}secondes for {config.learning.epochs} epochs")

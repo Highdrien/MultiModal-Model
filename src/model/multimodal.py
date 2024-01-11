@@ -82,14 +82,6 @@ class MultimodalClassifier(Model):
         x = self.relu(x)
         x = self.fc2(x)
         return x
-
-    # def parameters(self, recurse: bool = True) -> Iterator[Parameter]:
-    #     if recurse:
-    #         for model in self.basemodel.values():
-    #             yield from model.parameters(recurse)
-        
-    #     yield from self.fc1.parameters(recurse)
-    #     yield from self.fc2.parameters(recurse)
     
     def named_parameters(self, prefix: str = '', recurse: bool = True, remove_duplicate: bool = True) -> Iterator[Tuple[str, Parameter]]:
         if recurse:
@@ -104,6 +96,16 @@ class MultimodalClassifier(Model):
         super().to(device)
         for model in self.basemodel.values():
             model = model.to(device)
+        return self
+
+    def eval(self) -> None:
+        for model in self.basemodel.values():
+            model = model.eval()
+        return self
+    
+    def train(self) -> None:
+        for model in self.basemodel.values():
+            model = model.train()
         return self
         
 

@@ -44,6 +44,8 @@ class Metrics:
         y_pred and y_true must have shape like (B, 2)
         """
         metrics_value = []
+        y_true = torch.argmax(y_true, dim=-1)
+        y_pred = torch.argmax(y_pred, dim=-1)
         for metric in self.metrics.values():
             metrics_value.append(metric(y_pred, y_true).item())
         return np.array(metrics_value)
