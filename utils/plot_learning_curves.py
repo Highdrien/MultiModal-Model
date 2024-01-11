@@ -48,8 +48,10 @@ def get_result(path: str) -> Tuple[List[float], List[str]]:
 
 if __name__ == '__main__':
     logs_path = 'logs'
-    experiments_path = list(map(lambda folder: os.path.join(logs_path, folder), os.listdir(logs_path)))
-    print(experiments_path)
-    for experiment_path in experiments_path:
-        if 'likelihood' not in experiment_path:
-            save_learning_curves(path=experiment_path)
+    # experiments_path = list(map(lambda folder: os.path.join(logs_path, folder), os.listdir(logs_path)))
+    # print(experiments_path)
+    # for experiment_path in experiments_path:
+    #     if 'likelihood' not in experiment_path:
+    #         save_learning_curves(path=experiment_path)
+    
+    save_learning_curves(path=os.path.join(logs_path, 'audio_1'))
