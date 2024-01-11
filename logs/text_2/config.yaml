@@ -1,21 +1,21 @@
-config_metadata: 'Saving time : 01/09/2024, 19:47:02'
+config_metadata: 'Saving time : 01/11/2024, 16:41:17'
 name: 'experiment'
-task: 'likelihood'
+task: 'text'
 save_experiment: true
 logs: 'logs'
 
 # load options
 load:
-    text: [True, 'logs/text_0']
-    audio: [True, 'logs/audio_0']
-    video: [True, 'logs/video_0']
+    text: [True, 'logs/text_1']
+    audio: [True, 'logs/audio_1']
+    video: [False, None]
 
 # data options
 data:
     path: 'data'
     sequence_size: 20
     num_frames: 10
-    audio_length: 1000
+    audio_length: 2000
     num_features: 709
     num_classes: 2
 
@@ -29,7 +29,7 @@ model:
     video:
         hidden_size: 100
     multi:
-        likelihood: true
+        likelihood: false
         hidden_size: 128
         freeze_basemodel: true
 
@@ -37,7 +37,7 @@ model:
 learning:
     learning_rate: 0.01
     batch_size: 16
-    epochs: 3
+    epochs: 5
     device: 'cuda'
     milesstone: [5, 15]
     gamma: 0.1
