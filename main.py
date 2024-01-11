@@ -7,6 +7,10 @@ from src.train import train
 from src.test import test
 from utils import utils
 
+import os
+
+os.environ['KMP_DUPLICATE_LIB_OK']='TRUE'
+
 
 
 IMPLEMENTED = ['train', 'test', 'baseline']
