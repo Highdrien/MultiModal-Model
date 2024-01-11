@@ -1,3 +1,0 @@
-Notre projet traite des approches multimodales pour la prédiction de changement de prise de parole dans des conversations naturelles. 
-Nous nous appuyons sur le corpus de données multimodales appelé Paco-Cheese.
-Les objectifs de ce projet nous permettent d'introduire différentes notions de modalité textuelle et visuelle, ainsi que de comparer et d'explorer différents modèles de traitement multimodaux, et leur fusion entre eux.  
