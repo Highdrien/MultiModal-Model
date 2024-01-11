@@ -9,6 +9,8 @@
 \usepackage{subcaption} % pour les subfigures
 \usepackage{float}      % pour les figures
 
+\usepackage[backend=biber]{biblatex}
+\addbibresource{ref.bib}
 % \usepackage[style=ieee]{biblatex}
 % \addbibresource{ref.bib}
 % \bibliography{ref.bib}
@@ -60,7 +62,7 @@ pertinentes à notre apprentissage.
 
 Pour parvenir à détecter le changement de tour de parole dans les données textuelles, nous avons choisi d'utiliser un modèle
 considéré comme l'état de l'art pour la tâche de classification de texte : le modèle BERT (Bidirectional Encoder
-Representations from Transformers). Ce modèle utilise notament les transformers (voir Figure~\ref{fig: Transformers}).
+Representations from Transformers~\cite{Bert}). Ce modèle utilise notament les Transformers~\cite{transformers} (voir Figure~\ref{fig: Transformers}).
 
 Par ailleurs, BERT étant un modèle comprenant un nombre important de paramètres (environ 100 millions) il est inenvisageable avec
 nos moyens de l'entraîner "à partir de 0". Nous avons donc opté pour l'utilisation d'un modèle pré-entrainé sur la langue Française
@@ -90,9 +92,8 @@ La Figure~\ref{fig: model_text} résume l'architecture de ce modèle, qu'on appe
 
 \subsection{Traitement de l'audio}
 
-% \cite{DBLP:journals/corr/abs-2006-11477}
 Afin de détecter les changements de parole dans des données audio, nous avons choisi d'exploiter une approche similaire en utilisant
-un modèle avancé dans le domaine de la représentation audio : le modèle Wave2Vec. Wave2Vec, basé sur les Transformers, s'est établi
+un modèle avancé dans le domaine de la représentation audio : le modèle Wave2Vec~\cite{wav2vec}. Wave2Vec, basé sur les Transformers, s'est établi
 comme une référence pour la tâche de traitement du signal audio, en particulier pour la détection des variations dans la parole.
 Grâce à sa capacité à encoder de manière bidirectionnelle les représentations des signaux sonores, Wave2Vec excelle dans la
 compréhension des nuances acoustiques et des transitions subtiles entre les locuteurs. 
@@ -240,14 +241,14 @@ Voici le résultat obtenu pour le modèle multimodal :
     \label{fig:multi_1_results}
 \end{figure}
 
-Les graphiques de la Figure \ref{fig:multi_1_results} présentent les résultats de l'expérience multimodale. L'axe des abscisses
-représente le nombre d'époques, et l'axe des ordonnées représente l'exactitude du modèle pour la Figure \ref{fig:multi_1_acc} et la
-perte en entropie croisée pour la Figure \ref{fig:multi_1_loss}.
-D'après ces graphiques, on peut déduire que le modèle est parvenu à apprendre à prédire les changements de tour de parole en tirant
-parti à la fois des données textuelles et audio.
-\section{Conclusion}
+% Les graphiques de la Figure \ref{fig:multi_1_results} présentent les résultats de l'expérience multimodale. L'axe des abscisses
+% représente le nombre d'époques, et l'axe des ordonnées représente l'exactitude du modèle pour la Figure \ref{fig:multi_1_acc} et la
+% perte en entropie croisée pour la Figure \ref{fig:multi_1_loss}.
+% D'après ces graphiques, on peut déduire que le modèle est parvenu à apprendre à prédire les changements de tour de parole en tirant
+% parti à la fois des données textuelles et audio.
+% \section{Conclusion}
 
-% \bigskip
-% \printbibliography
+\bigskip
+\printbibliography
 
 \end{document}
