@@ -1,4 +1,4 @@
-config_metadata: 'Saving time : 01/11/2024, 14:12:06'
+config_metadata: 'Saving time : 01/11/2024, 15:00:07'
 name: 'experiment'
 task: 'audio'
 save_experiment: true
@@ -37,7 +37,7 @@ model:
 learning:
     learning_rate: 0.01
     batch_size: 16
-    epochs: 10
+    epochs: 5
     device: 'cuda'
     milesstone: [5, 15]
     gamma: 0.1
