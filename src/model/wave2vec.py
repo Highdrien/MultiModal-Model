@@ -19,8 +19,8 @@ class Wav2Vec2Classifier(BaseModel):
                  num_classes: bool=2,
                  audio_length: int=1000
                  ) -> None:
-        hidden_size = 2 * 1024
-        super(Wav2Vec2Classifier, self).__init__(hidden_size * 2, last_layer, num_classes)
+        hidden_size = 256
+        super(Wav2Vec2Classifier, self).__init__(hidden_size, last_layer, num_classes)
         self.processor = Wav2Vec2Processor.from_pretrained(pretrained_model_name)
         self.model = Wav2Vec2Model.from_pretrained(pretrained_model_name)
 
@@ -35,7 +35,7 @@ class Wav2Vec2Classifier(BaseModel):
             raise ValueError(f'audio_length must be in {audio_length_2_hidden_size.keys()} but found {audio_length}.')
 
         self.fc = torch.nn.Linear(in_features=audio_length_2_hidden_size[audio_length],
-                                  out_features=hidden_size * 2)
+                                  out_features=hidden_size)
         self.dropout = torch.nn.Dropout(p=0.1)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
