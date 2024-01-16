@@ -7,13 +7,13 @@ sys.path.append(up(os.path.abspath(__file__)))
 sys.path.append(up(up(os.path.abspath(__file__))))
 sys.path.append(up(up(up(os.path.abspath(__file__)))))
 
-
 from utils import utils
 from model.basemodel import Model
 from model import bert, lstm, wave2vec, multimodal, likelihood
 
 
 def get_model(config: EasyDict) -> Model:
+    """ Get the model according the configuration (config) """
     implemented = ['text', 'audio', 'video', 'multi']
     if config.task not in implemented:
         raise NotImplementedError(f'Expected config.task in {implemented} but found {config.task}')

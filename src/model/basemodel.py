@@ -1,5 +1,4 @@
-import torch
-import torch.nn as nn
+from torch import nn, Tensor
 
 
 class Model(nn.Module):
@@ -10,8 +9,9 @@ class Model(nn.Module):
         """Return the number of parameters of the model"""
         return sum(p.numel() for p in self.parameters() if p.requires_grad)
 
-    def get_only_learned_parameters(self) -> dict[str, torch.Tensor]:
-        state_dict: dict[str, torch.Tensor] = {}
+    def get_only_learned_parameters(self) -> dict[str, Tensor]:
+        """ save only the learned parameters """
+        state_dict: dict[str, Tensor] = {}
         for name, param in self.named_parameters():
             if param.requires_grad:
                 state_dict[name] = param
@@ -36,11 +36,13 @@ class BaseModel(Model):
     def put_last_layer(self, last_layer: bool) -> None:
         self.last_layer = last_layer
     
-    def forward_last_layer(self, x: torch.Tensor) -> torch.Tensor:
+    def forward_last_layer(self, x: Tensor) -> Tensor:
+        """ forward data in relu and last fc """
         x = self.relu(x)
         x = self.last_linear(x)
         return x
     
     def get_hidden_size(self) -> int:
+        """ get the hidden_size (before last fc layer) """
         return self.hidden_size
     

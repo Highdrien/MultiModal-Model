@@ -4,7 +4,7 @@ from os.path import dirname as up
 from typing import Iterator, Tuple
 
 import torch    
-import torch.nn as nn
+from torch import nn, Tensor
 from torch.nn.parameter import Parameter
 
 sys.path.append(up(os.path.abspath(__file__)))
@@ -61,8 +61,8 @@ class MultimodalClassifier(Model):
         self.relu = nn.ReLU()
 
     def forward(self,
-                data: dict[str, torch.Tensor]
-                ) -> torch.Tensor:
+                data: dict[str, Tensor]
+                ) -> Tensor:
         """ go through the model
 
         input       shape                          dtype
