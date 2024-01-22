@@ -4,7 +4,7 @@ from os.path import dirname as up
 from typing import Iterator, Tuple
 
 import torch    
-import torch.nn as nn
+from torch import nn, Tensor
 from torch.nn.parameter import Parameter
 
 sys.path.append(up(os.path.abspath(__file__)))
@@ -61,8 +61,8 @@ class MultimodalClassifier(Model):
         self.relu = nn.ReLU()
 
     def forward(self,
-                data: dict[str, torch.Tensor]
-                ) -> torch.Tensor:
+                data: dict[str, Tensor]
+                ) -> Tensor:
         """ go through the model
 
         input       shape                          dtype
@@ -82,14 +82,6 @@ class MultimodalClassifier(Model):
         x = self.relu(x)
         x = self.fc2(x)
         return x
-
-    # def parameters(self, recurse: bool = True) -> Iterator[Parameter]:
-    #     if recurse:
-    #         for model in self.basemodel.values():
-    #             yield from model.parameters(recurse)
-        
-    #     yield from self.fc1.parameters(recurse)
-    #     yield from self.fc2.parameters(recurse)
     
     def named_parameters(self, prefix: str = '', recurse: bool = True, remove_duplicate: bool = True) -> Iterator[Tuple[str, Parameter]]:
         if recurse:
@@ -104,6 +96,16 @@ class MultimodalClassifier(Model):
         super().to(device)
         for model in self.basemodel.values():
             model = model.to(device)
+        return self
+
+    def eval(self) -> None:
+        for model in self.basemodel.values():
+            model = model.eval()
+        return self
+    
+    def train(self) -> None:
+        for model in self.basemodel.values():
+            model = model.train()
         return self
         
 

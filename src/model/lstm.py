@@ -3,8 +3,7 @@ import sys
 from os.path import dirname as up
 
 import torch
-import torch.nn as nn
-from typing import Optional
+from torch import nn, Tensor
 
 sys.path.append(up(os.path.abspath(__file__)))
 sys.path.append(up(up(os.path.abspath(__file__))))
@@ -16,13 +15,14 @@ class LSTMClassifier(BaseModel):
     def __init__(self, 
                  num_features: int,
                  hidden_size: int,
-                 num_classes: Optional[int]=2,
-                 last_layer: Optional[bool]=True) -> None:
+                 num_classes: int=2,
+                 last_layer: bool=True) -> None:
+        """ model for learn the from video"""
         super(LSTMClassifier, self).__init__(hidden_size * 2, last_layer, num_classes)
         self.lstm = nn.LSTM(num_features, hidden_size, batch_first=True)
         self.dropout = nn.Dropout(0.1)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: Tensor) -> Tensor:
         """
         input shape:  (batch_size, num_frames, num_features, 2)     dtype: torch.float32
         output_shape: (B, C) or (B, hidden_size)        dtype: torch.float32

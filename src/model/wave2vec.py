@@ -1,6 +1,5 @@
 import os
 import sys
-from icecream import ic
 from os.path import dirname as up
 
 import torch
@@ -70,6 +69,7 @@ class Wav2Vec2Classifier(BaseModel):
         return x
     
     def train(self) -> None:
+        """ put dropout (but not in wave2vect module) """
         if self.last_layer:
             self.dropout = self.dropout.train()
     

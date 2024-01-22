@@ -6,6 +6,10 @@ import torch
 
 
 def get_text(info: pd.DataFrame, num_line_to_load: int=5) -> List[str]:
+    """ 
+    Get the <num_line_to_load> from info['text_filepath'] and load
+    return the text in list[str] where each element is a word.
+    """
     filepath = info['text_filepath']
     ipu = info['ipu_id']
 

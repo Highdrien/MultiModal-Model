@@ -2,6 +2,7 @@ import os
 import sys
 import pandas as pd
 from typing import Tuple
+from easydict import EasyDict
 from os.path import dirname as up
 
 import torch
@@ -106,8 +107,19 @@ class DataGenerator(Dataset):
         
 
 
-def create_dataloader(mode: str, config: dict) -> DataLoader:
-    assert mode in ['train', 'val', 'test'], f"mode must be train, val or test but is '{mode}'"
+def create_dataloader(mode: str, config: EasyDict) -> DataLoader:
+    """ Create a dataloader 
+    -----
+    ARGUMENTS
+    mode: str
+        select mode. Can be train, val or test
+    config: EasyDict    
+    -----
+    OUTPUTS:
+    dataloader: DataLoader
+    """
+    if mode not in ['train', 'val', 'test']:
+        raise ValueError(f"mode must be train, val or test but is '{mode}'")
 
     if config.task != 'multi':
         load = dict(map(lambda x: (x, config.task == x), ['text', 'audio', 'video']))
@@ -133,7 +145,6 @@ def create_dataloader(mode: str, config: dict) -> DataLoader:
 if __name__ == '__main__':
     import yaml
     from icecream import ic
-    from easydict import EasyDict
 
     stream = open('config/config.yaml', 'r')
     config = EasyDict(yaml.safe_load(stream))
@@ -159,3 +170,18 @@ if __name__ == '__main__':
         
     #     for i in range(len(generator)):
     #         generator.__getitem__(index=i)
+
+
+    # generator = DataGenerator(mode='train',
+    #                           data_path='data', 
+    #                           load={'audio': False, 'text': False, 'video': False},
+    #                           audio_size=2000,
+    #                           sequence_size=20,
+    #                           video_size=10)
+
+    # sum_label = torch.zeros((2))
+    # ic(sum_label.shape)
+    # for i in range(len(generator)):
+    #     sum_label += generator.__getitem__(index=i)[-1]
+    
+    # ic(sum_label / sum(sum_label))

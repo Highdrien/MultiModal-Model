@@ -4,7 +4,7 @@ from typing import Any
 from os.path import dirname as up
 
 import torch
-import torch.nn as nn
+from torch import nn, Tensor
 from transformers import BertModel  
 
 sys.path.append(up(up(os.path.abspath(__file__))))
@@ -36,9 +36,9 @@ class BertClassifier(BaseModel):
         # print(next(self.fc.parameters()))
 
     def forward(self,
-                x: torch.Tensor,
+                x: Tensor,
                 attention_mask: Any=None
-                ) -> torch.Tensor:
+                ) -> Tensor:
         """
         x shape: (B, sequence_size),                dtype: torch.int64
         output_shape: (B, C) or (B, hidden_size)    dtype: torch.float32
