@@ -1,5 +1,5 @@
 name: experiment
-task: text          # choose btw text, audio, video or multi
+task: audio          # choose btw text, audio, video or multi
 save_experiment: true
 logs: logs
 
