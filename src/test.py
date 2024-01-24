@@ -38,7 +38,9 @@ def test(config: EasyDict, logging_path: str) -> None:
     ic(model.get_number_parameters())
     
     # Loss
-    criterion = torch.nn.CrossEntropyLoss(reduction='mean')
+    weight = torch.tensor([1, 3.9], device=device)
+    ic(weight)
+    criterion = torch.nn.CrossEntropyLoss(reduction='mean', weight=weight)
 
     # Get Metrics
     metrics = Metrics(config=config)
@@ -74,8 +76,7 @@ def test(config: EasyDict, logging_path: str) -> None:
     ###################################################################
     test_metrics = test_metrics / n_test
 
-    for i in range(len(metrics.metrics_name)):
-        print(f'{metrics.metrics_name[i]}\t: {test_metrics[i + 1]}')
+    print(metrics.table(test_metrics[1:]))
     
     test_logger(path=logging_path,
                 metrics=[config.learning.loss] + metrics.metrics_name,

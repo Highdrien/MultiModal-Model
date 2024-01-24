@@ -21,7 +21,7 @@ from utils import utils
 from config.config import train_logger, train_step_logger
 
 
-LABEL_DISTRIBUTION = [0.8051, 0.1949]
+# LABEL_DISTRIBUTION = [0.8051, 0.1949]
 
 
 def train(config: EasyDict) -> None:
@@ -43,7 +43,8 @@ def train(config: EasyDict) -> None:
     ic(model.get_number_parameters())
     
     # Loss
-    weight = torch.tensor(list(map(lambda x: 1 - x, LABEL_DISTRIBUTION)), device=device)
+    weight = torch.tensor([1, 3.9], device=device)
+    ic(weight)
     criterion = torch.nn.CrossEntropyLoss(reduction='mean', weight=weight)
 
     # Optimizer and Scheduler
@@ -92,7 +93,12 @@ def train(config: EasyDict) -> None:
             current_loss = train_loss / (i + 1)
             train_range.set_description(f"TRAIN -> epoch: {epoch} || loss: {current_loss:.4f}")
             train_range.refresh()
-        
+
+        train_loss = train_loss / n_train
+        train_metrics = train_metrics / n_train
+
+        print('TRAIN:')
+        print(metrics.table(train_metrics))
 
         ###############################################################
         # Start Validation                                            #
@@ -125,13 +131,11 @@ def train(config: EasyDict) -> None:
         ###################################################################
         # Save Scores in logs                                             #
         ###################################################################
-        train_loss = train_loss / n_train
         val_loss = val_loss / n_val
-        train_metrics = train_metrics / n_train
         val_metrics = val_metrics / n_val
 
-        print(f'accuracy -> TRAIN: {train_metrics[0]:.2f}   VAL: {val_metrics[0]:.2f}')
-        print(f'f1-score -> TRAIN: {train_metrics[-1]:.2f}   VAL: {val_metrics[-1]:.2f}')
+        print('VAL:')
+        print(metrics.table(val_metrics))
         
         if save_experiment:
             train_step_logger(path=logging_path, 
