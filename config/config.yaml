@@ -1,11 +1,11 @@
 name: experiment
-task: multi           # choose btw text, audio, video or multi
+task: multi          # choose btw text, audio, video or multi
 save_experiment: true
 logs: logs
 
 load:                 # data to use (only for multi)
-  text: [true, logs/text_1]
-  audio: [true, logs/audio_1]
+  text: [true, logs/text_4]
+  audio: [true, logs/audio_2]
   video: [false, null]
 
 data:
@@ -35,7 +35,7 @@ model:
 learning:
   learning_rate: 0.01
   batch_size: 16
-  epochs: 5
+  epochs: 10
   device: cuda
   milesstone: [5, 15]         # gradient decay at epoch 5 and 15
   gamma: 0.1                  # learning rate will be multiplicate by 0.1 at epochs 5 and 15
