@@ -22,19 +22,28 @@ class Metrics:
         # test if metrics is in config
         if 'metrics' in config:
             metrics_name = list(filter(lambda x: config.metrics[x], config.metrics))
+
+        task = 'multiclass'
+        average = 'macro'
         
         # test with metrics there are
         if 'acc' in metrics_name:
             self.metrics['acc'] = Accuracy(task='binary')
         
         if 'precision' in  metrics_name:
-            self.metrics['precision'] = Precision(task='binary')
+            self.metrics['precision'] = Precision(task=task,
+                                                  num_classes=2,
+                                                  average=average)
         
         if 'recall' in metrics_name:
-            self.metrics['recall'] = Recall(task='binary')
+            self.metrics['recall'] = Recall(task=task,
+                                            num_classes=2,
+                                            average=average)
         
         if 'f1' in  metrics_name or 'f1score' in metrics_name:
-            self.metrics['f1'] = F1Score(task='binary')
+            self.metrics['f1'] = F1Score(task=task,
+                                         num_classes=2,
+                                         average=average)
     
         self.num_metrics = len(self.metrics)
         self.metrics_name = list(self.metrics.keys())
@@ -56,26 +65,47 @@ class Metrics:
     def to(self, device: torch.device) -> None:
         for key in self.metrics.keys():
             self.metrics[key] = self.metrics[key].to(device)
+    
+    def table(self, metrics_value: np.ndarray) -> str:
+        if len(metrics_value) != self.num_metrics:
+            ValueError(f'Expected metrics_value have size {self.num_metrics} but found {len(metrics_value)}.')
+        
+        table = f'   METRICS NAME{" " * 5} -> METRICS VALUE\n'
+        for i in range(self.num_metrics):
+            metric_name = self.metrics_name[i]
+            table += f"{metric_name}{' ' * (20 - len(metric_name))} -> {metrics_value[i]:.3f}\n"
+        
+        return table
+
 
 
 if __name__ == '__main__':
     import yaml
     config = EasyDict(yaml.safe_load(open('config/config.yaml', 'r')))
-    B = 4       # batch_size
-    seuil = 0.66
+
+    B = 128
+    seuil = 0.8
     y_true = torch.rand((B, 2))
-    y_pred = torch.rand(B, 2)
+    y_pred = torch.rand((B, 2))
+    y_pred_0 = torch.zeros((B, 2))
+    y_pred_1 = torch.zeros((B, 2))
+    for i in range(B):
+        y_pred_1[i, 1] = 1
     y_true[y_true <= seuil] = 0 
     y_true[y_true > seuil] = 1
 
-
     metrics = Metrics(config=config)
     print(metrics)
-    metrics_value = metrics.compute(y_pred=y_pred, y_true=y_true)
-    print(metrics_value)
 
-    for i, metric_name in enumerate(metrics.metrics.keys()):
-        print(f"{metric_name[:6]}\t->\t{metrics_value[i]:.3f}")
-    
-    print(metrics.metrics_name)
+    print('y_pred rand:')
+    metrics_value = metrics.compute(y_pred=y_pred, y_true=y_true)
+    print(metrics.table(metrics_value))
+
+    print('y_pred 0:')
+    metrics_value = metrics.compute(y_pred=y_pred_0, y_true=y_true)
+    print(metrics.table(metrics_value))
+
+    print('y_pred 1:')
+    metrics_value = metrics.compute(y_pred=y_pred_1, y_true=y_true)
+    print(metrics.table(metrics_value))
         
