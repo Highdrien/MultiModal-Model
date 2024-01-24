@@ -2,16 +2,16 @@
 \usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{csquotes}   % pour éviter un warning
 \usepackage{graphicx}   % pour les images
 \usepackage{hyperref}   % pour les références
-\usepackage{amssymb}    % pour les symboles de maths comme \mathbb{R}
-\usepackage{mathtools}  % pour rajouter \text dans un environment math
-\usepackage{subcaption} % pour les subfigures
+% \usepackage{amssymb}    % pour les symboles de maths comme \mathbb{R}
+% \usepackage{mathtools}  % pour rajouter \text dans un environment math
+% \usepackage{subcaption} % pour les subfigures
 \usepackage{float}      % pour les figures
 
 \usepackage[style=ieee,backend=biber]{biblatex}
 \addbibresource{ref.bib}
-% \bibliography{ref.bib}
 
 \hypersetup{
     colorlinks=true,
@@ -28,12 +28,15 @@
 \begin{document}
 
 \maketitle
+\bigskip
+\tableofcontents
+\newpage
 
 \section{Introduction}
 
 Notre projet traite des approches multimodales pour la prédiction de changement de prise de parole dans des conversations naturelles. 
 % Nous nous appuyons sur le corpus de données multimodales appelé Paco-Cheese~\cite{paperswithcode-paco}.
-Les objectifs de ce projet nous permettent d'introduire différentes notions de modalité textuelle, visuelle et auditf, ainsi que de
+Les objectifs de ce projet nous permettent d'introduire différentes notions de modalité textuelle, visuelle et auditive, ainsi que de
 comparer et d'explorer différents modèles de traitement multimodaux, et leur fusion entre eux.
 
 \section{Données}
@@ -55,7 +58,7 @@ comparer et d'explorer différents modèles de traitement multimodaux, et leur f
 \section{Conclusion}
 
 Notre projet a exploré l'utilisation de modèles unimodaux et du multimodaux pour l'analyse dynamique de la conversation en français.
-Nos modèles unimodaux ont été entraînés sur des données textuelles, audio et vidéo séparemment. Leur performance variaient selon le type de données, avec des résultats prometteurs pour les données textuelles et audio, mais des résultats moins satisfaisants pour les données vidéo.
+Nos modèles unimodaux ont été entraînés sur des données textuelles, audio et vidéo séparément. Leurs performances variaient selon le type de données, avec des résultats prometteurs pour les données textuelles et audio, mais des résultats moins satisfaisants pour les données vidéo.
 
 Nos modèles multimodaux ont été entraînés en combinant les données textuelles et audio. 
 % Les résultats de ces modèles étaient comparables à ceux des modèles unimodaux, ce qui indique que les données textuelles et audio contiennent des informations complémentaires.

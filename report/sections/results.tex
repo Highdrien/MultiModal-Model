@@ -1,16 +1,23 @@
+Après avoir entraîné les modèles, nous avons testé leurs performances sur la base de données de test.
+La Figure~\ref{tab: test} nous alors les résultats des modèles en fonctions des métriques.
+
 \begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
         Modèle & accuracy & precision & rappel & $f_1$ score\\
         \hline
-        \textit{TEXT} & 83 & 41 & 50 & 45\\
+        \textit{TEXT} & 82.8 & 41.3 & 50.0 & 45.3\\
         \hline
-        \textit{AUDIO} & 47 & 48 & 47 & 41\\
+        \textit{AUDIO} & 47.1 & 48.5 & 47.4 & 41.5\\
         \hline
-        \textit{VIDEO} & 0.443 & 0.182 & 0.032 & 0.053\\
+        \textit{VIDEO} & \textbf{82.9} & 41.4 & 50.0 & 45.2\\
+        \hline
+        \textit{LATE FUSION} & 78.5 & \textbf{50.6} & 50.1 & \textbf{48.8}\\
+        \hline
+        \textit{EARLY FUSION} & \textbf{82.9} & 43.6 & \textbf{50.2} & 45.7\\
         \hline
     \end{tabular}
-    \caption{Résultats de test des modèles uni-modales}
-    \label{tab: test unimodal}
+    \caption{Résultats de test des modèles. Le \textit{LATE} et \textit{EARLY FUSION} n'utilisent pas le modèle \textit{VIDEO}.}
+    \label{tab: test}
 \end{table}
