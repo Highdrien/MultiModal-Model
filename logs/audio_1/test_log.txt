@@ -1,5 +1,0 @@
-crossentropy: 0.4596759472344373
-acc: 0.8283783783783784
-precision: 0.0
-recall: 0.0
-f1: 0.0
