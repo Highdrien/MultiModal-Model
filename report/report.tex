@@ -148,33 +148,33 @@ l'entraînement de cette architecture multimodale comprenant un nombre important
 
 Au cours de ce processus, pour des raisons de contraintes de ressources, on gèle les poids des modèles unimodales.
 
-\subsection{Maximum de vraisemblance}
+\subsection{Maximum de vraisemblance - Late fusion}
 Ce premier modèle multimodal fait passer chaque donnée dans son modèle pré-entraîné associé et fait une moyenne des sorties. Le but
-est alors de faire une moyenne des probabilités selon chaque canal. Nous appellerons ce modèle \textit{LIKELIHOOD} du fait que le but
+est alors de faire une moyenne des probabilités selon chaque canal. Nous appellerons ce modèle \textit{LATE FUSION} du fait que le but
 est de maximiser la log-likelihood.
-La Figure~\ref{fig: likelihood} résume l'architecture de ce modèle.
+La Figure~\ref{fig: LATE FUSION} résume l'architecture de ce modèle.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{Likelihood.png}
-    \caption{Architecure du modèle \textit{LIKELIHOOD}}
-    \label{fig: likelihood}
+    \includegraphics[width=0.6\textwidth]{late_fusion.png}
+    \caption{Architecure du modèle \textit{LATE FUSION}}
+    \label{fig: LATE FUSION}
 \end{figure}
 
-\subsection{Apprentissage multi}
+\subsection{Apprentissage early fusion}
 Ce deuxième modèle plus évolué consiste à faire passer chaque donnée dans son modèle pré-entraîné associé et de récupérer
 l'information avant qu'elle ne passe dans la dernière couche dense (celle de taille deux). On concatène alors toute l'information 
 et l'on la fait passer dans une grande couche dense de taille 2.
-La Figure~\ref{fig: multi} résume l'architecture de ce modèle, qu'on appelera \textit{MULTI}.
+La Figure~\ref{fig: EARLY FUSION} résume l'architecture de ce modèle, qu'on appelera \textit{EARLY FUSION}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{model_multi.png}
-    \caption{Architecure du modèle \textit{MULTI}.}
-    \label{fig: multi}
+    \includegraphics[width=0.6\textwidth]{early_fusion.png}
+    \caption{Architecure du modèle \textit{EARLY FUSION}.}
+    \label{fig: EARLY FUSION}
 \end{figure}
 
-\section{Results}
+\section{Resultats}
 
 \subsection{Métriques}
 
@@ -251,7 +251,22 @@ Voici le résultat obtenu pour le modèle multimodal :
 % perte en entropie croisée pour la Figure \ref{fig:multi_1_loss}.
 % D'après ces graphiques, on peut déduire que le modèle est parvenu à apprendre à prédire les changements de tour de parole en tirant
 % parti à la fois des données textuelles et audio.
-% \section{Conclusion}
+
+\section{Conclusion}
+
+Notre projet a exploré l'utilisation de modèles unimodaux et du multimodaux pour l'analyse dynamique de la conversation en français.
+Nos modèles unimodaux ont été entraînés sur des données textuelles, audio et vidéo séparemment. Leur performance variaient selon le type de données, avec des résultats prometteurs pour les données textuelles et audio, mais des résultats moins satisfaisants pour les données vidéo.
+
+Nos modèles multimodaux ont été entraînés en combinant les données textuelles et audio. 
+% Les résultats de ces modèles étaient comparables à ceux des modèles unimodaux, ce qui indique que les données textuelles et audio contiennent des informations complémentaires.
+
+% Ces résultats suggèrent que les modèles multimodaux, en particulier ceux qui combinent les données textuelles et audio, peuvent être des outils efficaces pour analyser la dynamique conversationnelle. 
+% Cependant, la performance inférieure du modèle vidéo indique que des recherches supplémentaires sont nécessaires pour mieux comprendre comment intégrer et exploiter les données vidéo dans ces analyses.
+
+Comme perspective, on pourrait explorer différentes manières d'intégrer les trois modalités de données (textes, audios et vidéos) dans un modèle multimodal, 
+ainsi que l'utilisation d'autres types de données ou de modèles d'apprentissage automatique. 
+De plus, des recherches supplémentaires pourraient également se concentrer sur l'amélioration des performances du modèle vidéo, 
+peut-être en explorant différentes méthodes d'extraction de caractéristiques ou en utilisant des ensembles de données vidéo plus grands ou plus diversifiés.
 
 \bigskip
 \printbibliography
