@@ -1,0 +1,20 @@
+Les données proviennent d'un ensemble de données multimodales, en français, composé de 26 dyades de 15 à 20 minutes.
+Chaque dyade est composée de deux personnes qui discutent d'un sujet donné. Les données sont composées de trois modalités : la vidéo,
+l'audio et le texte.
+Dans le cas des vidéos, les données sont déjà pré-traitées et sont composées de landmarks du visage des deux personnes en conversation. 
+Ces données sont des séquences de 10 images par personne, soit 20 images au total. Les données audio sont des enregistrements audio
+des deux interlocuteurs. Enfin, les données textuelles sont des scripts de conversation des deux interlocuteurs.
+En effet, les données sont annotées de deux manières : avec de la segmentation de la parole basée sur les silences en utilisant les
+IPUs et avec des scripts de conversation, qui servent eux le traitement de texte. 
+Les IPUs (Inter-Pausal Units) représentent des segments de parole séparés par des pauses de paroles et sont utilisés comme unité de
+parole dans l'analyse de conversations.
+Utiliser l'unité du IPU permet d'analyser la structure et le rythme de la dynamique conversationnelle. 
+
+Au-delà des fichiers audios et des fichiers textes qui sont sous leur format traditionnel respectif, 
+les données des vidéos seront traitées à travers de fichier csv qui contiennent les landmarks du visage des deux personnes en
+conversation. Ces fichiers csv sont composés de colonnes indicant les caractéristiques des différentes prises de paroles. 
+
+Ces données "vidéos" sous forme de fichiers csv causent une significative augmentation du temps de chargement de ces données étant
+donné qu'ils donnent le lien vers des ressources à charger, et ce pour chaque ligne du fichier csv. 
+Pour palier ce problème, nous avons utilisé des \textit{skiprows} afin d'en accélérer le processus et de sélectionner les données
+pertinentes à notre apprentissage.
