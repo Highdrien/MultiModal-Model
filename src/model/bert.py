@@ -28,8 +28,8 @@ class BertClassifier(BaseModel):
             for param in self.bert.parameters():
                 param.requires_grad = False
 
-        self.dropout = nn.Dropout(0.1)
-        self.fc = nn.Linear(hidden_size, hidden_size)
+        self.dropout = nn.Dropout(0)
+        self.fc = nn.Linear(in_features=768, out_features=hidden_size)
         self.last_linear = nn.Linear(in_features=hidden_size, out_features=num_classes)
         self.relu = nn.ReLU()
 
