@@ -5,4 +5,5 @@ matplotlib==3.7.1
 numpy==1.24.2
 torch==2.0.1+cu117
 torchmetrics==0.11.0
+transformers==4.27.4
 tqdm==4.64.1
