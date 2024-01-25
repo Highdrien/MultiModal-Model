@@ -2,6 +2,24 @@
 
 Our project focuses on multimodal approaches for predicting turn-taking changes in natural conversations. The goals of this project enable us to introduce various concepts of textual, visual, and auditory modality, as well as to compare and explore different multimodal processing models and their fusion.
 
+- [Projet SAM](#projet-sam)
+- [Requirements](#requirements)
+- [Launch the code](#launch-the-code)
+  - [Mode](#mode)
+  - [Configuration](#configuration)
+  - [Help](#help)
+  - [Example](#example)
+- [Models](#models)
+  - [Unimodal Models](#unimodal-models)
+    - [TEXT](#text)
+    - [AUDIO](#audio)
+    - [VIDEO](#video)
+  - [Multimodal Models](#multimodal-models)
+    - [LATE FUSION](#late-fusion)
+    - [EARLY FUSION](#early-fusion)
+- [Results](#results)
+
+
 # Requirements
 To run the code you need python (We use python 3.9.13) and packages that is indicate in [`requirements.txt`](requirements.txt).
 You can run the following code to install all packages in the correct versions:
