@@ -1,14 +1,13 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper]{llncs}
 \usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{csquotes}   % pour éviter un warning
 \usepackage{graphicx}   % pour les images
 \usepackage{hyperref}   % pour les références
-% \usepackage{amssymb}    % pour les symboles de maths comme \mathbb{R}
-% \usepackage{mathtools}  % pour rajouter \text dans un environment math
-% \usepackage{subcaption} % pour les subfigures
 \usepackage{float}      % pour les figures
+\usepackage{multicol}   % pour les 2 colonnes
+\usepackage{fullpage}   % mets les marges en petits 
 
 \usepackage[style=ieee,backend=biber]{biblatex}
 \addbibresource{ref.bib}
@@ -21,21 +20,28 @@
     urlcolor=blue     % Couleur des liens vers les URL
 }
 
-\title{Rapport SAM \\ Modèle multi-modaux}
+\title{Rapport SAM}
+\subtitle{Modèle multi-modaux}
 \author{Cléa Han, Yanis Labeyrie et Adrien Zabban}
+\institute{Ecole Centrale Méditerranée, 13013 Marseille, France}
 \date{janvier 2024}
 
 \begin{document}
 
 \maketitle
-\bigskip
-\tableofcontents
-\newpage
+\begin{abstract}
+    Notre projet explore les méthodes multimodales pour prédire les changements de discours dans les conversations naturelles.
+    En utilisant un ensemble de données françaises, Paco-Cheese, avec des modalités vidéo, audio et textuelles, nous visons à
+    comparer différents modèles de traitement multimodal. La tâche consiste à classer les données en deux catégories sur la base
+    de segments textuels, audio et/ou vidéo. Nous segmentons les données à l'aide d'unités interpausales (IPU) et extrayons les
+    20 derniers mots, les 2 dernières secondes de l'audio et les 10 dernières images de la vidéo. Les données vidéo sont
+    prétraitées pour extraire les repères faciaux, mais l'analyse est difficile en raison de l'ampleur de l'ensemble de données.
+\end{abstract}
+
+\begin{multicols}{2}
 
 \section{Introduction}
-
 Notre projet traite des approches multimodales pour la prédiction de changement de prise de parole dans des conversations naturelles. 
-% Nous nous appuyons sur le corpus de données multimodales appelé Paco-Cheese~\cite{paperswithcode-paco}.
 Les objectifs de ce projet nous permettent d'introduire différentes notions de modalité textuelle, visuelle et auditive, ainsi que de
 comparer et d'explorer différents modèles de traitement multimodaux, et leur fusion entre eux.
 
@@ -70,7 +76,8 @@ Ces résultats suggèrent que les modèles multimodaux, en particulier ceux qui 
 Comme perspective, on pourrait explorer différentes manières d'intégrer les trois modalités de données (textes, audios et vidéos) dans un modèle multimodal, 
 ainsi que l'utilisation d'autres types de données ou de modèles d'apprentissage automatique. 
 
-\newpage
 \printbibliography
+
+\end{multicols}
 
 \end{document}

@@ -17,7 +17,7 @@ Nous avons alors trouvé et appliqué les poids $w_0 = 1$ et $w_1=3.9$. La loss 
 (avec des notations standards)~:
 
 \begin{equation}
-    L(x, y) = \frac{-1}{N} \sum_{n=0}^{N} w_0 (1-y_n) \log(1-x_n) + w_1 y_n \log(x_n)
+    L(x, y) = \frac{-1}{N} \sum_{n=0}^{N} \sum_{c=0}^{1} w_c y_n^{(c)} \log(x_n)
     \label{eq: loss}
 \end{equation}
 
