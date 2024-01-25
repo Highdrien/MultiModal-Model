@@ -21,7 +21,7 @@ def forward(model: Model, data: dict[str, Tensor], task: str) -> Tensor:
         return model.forward(data)
 
 
-def dict_to_device(data: dict[str, Tensor], device: torch.Tensor) -> None:
+def dict_to_device(data: dict[str, Tensor], device: torch.device) -> None:
     """ load all the data.values in the device """
     for key in data.keys():
         data[key] = data[key].to(device)
