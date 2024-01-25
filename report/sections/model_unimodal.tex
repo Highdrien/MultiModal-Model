@@ -20,8 +20,8 @@ appelé CamemBERT et nous avons gelé les poids de CamemBERT.
 
 On prend alors les données de textes qui sont une liste d'entiers, correspondant 
 à l'indice de chaque mot du tokenizer de CamemBERT. Ces données passent alors dans CamemBERT, elles ressortent avec une dimension de
-64. Elles passent alors dans une activation ReLU puis une couche dense de taille 768, puis une couche de dropout (avec un taux
-d'oublie de $10\%$), pour enfin passer un dernier ReLU et une dernière couche dense à 2 dimensions. 
+64. Elles passent alors dans une activation ReLU puis une couche dense de taille 64, puis une couche de dropout (avec un taux
+d'oubli de $10\%$), pour enfin passer dans un dernier ReLU et une dernière couche dense à 2 dimensions. 
 La Figure~\ref{fig: model_text} résume l'architecture de ce modèle, qu'on appelera \textit{TEXT}.
 
 \begin{figure}[H]
@@ -61,8 +61,8 @@ Term Memory). En effet, ce modèle est pertinent pour la détection du changemen
 informations sur de longues séquences temporelles, ce qui est essentiel pour analyser les variations subtiles dans les mouvements
 des landmarks faciaux. 
 
-Comme pour l'audio, la vidéo contient un ensemble de deux fois 10 images pour chacun des interlocuteurs. On les fait alors passer
-dans deux couches LSTM et on concatène les sorties pour ensuite les faire passer dans du relu et une couche dense de taille 2.
+Comme pour l'audio, la vidéo contient un ensemble de deux fois 10 images pour chaque interlocuteur. On les fait alors passer
+dans deux couches LSTM et on concatène les sorties pour ensuite les faire passer dans une couche ReLU et une couche dense de taille 2.
 La Figure~\ref{fig: model_video} résume l'architecture de ce modèle, qu'on appelera \textit{VIDEO}.
 
 \begin{figure}[H]
