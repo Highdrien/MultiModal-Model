@@ -6,7 +6,6 @@
 [![Black_logo](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 [![Ruff](https://github.com/Highdrien/MultiModal-Model/actions/workflows/ruff.yaml/badge.svg)](https://github.com/Highdrien/MultiModal-Model/actions/workflows/ruff.yaml)
-
 [![Flake8](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake.yaml/badge.svg)](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake.yaml)
 
 
