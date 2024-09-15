@@ -1,8 +1,13 @@
 # Projet SAM
 
+[![License](https://img.shields.io/github/license/valentingol/LeafNothingBehind?color=999)](https://stringfixer.com/fr/MIT_license)
 ![PythonVersion](https://img.shields.io/badge/python-3.10-informational)
 ![PytorchVersion](https://img.shields.io/badge/Pytorch-2.0-blue)
-[![Flake8](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake8.yaml/badge.svg)](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake.yaml)
+[![Black_logo](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+
+[![Flake8](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake.yaml/badge.svg)](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake.yaml)
+
 
 [![Torch_logo](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
 
