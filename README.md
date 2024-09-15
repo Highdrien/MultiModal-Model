@@ -1,6 +1,8 @@
 # Projet SAM
 
 [![License](https://img.shields.io/github/license/Highdrien/MultiModal-Model?color=999)](https://stringfixer.com/fr/MIT_license)
+[![License](https://img.shields.io/github/license/Highdrien/MultiModal-Model?color=999)](https://github.com/Highdrien/MultiModal-Model/blob/main/LICENSE)
+
 ![PythonVersion](https://img.shields.io/badge/python-3.10-informational)
 ![PytorchVersion](https://img.shields.io/badge/Pytorch-2.0-blue)
 [![Black_logo](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
