@@ -1,23 +1,15 @@
-import os
-import sys
 import numpy as np
 from easydict import EasyDict
-from os.path import dirname as up
 
 import torch
 from torch import Tensor
 from torchmetrics import Accuracy, F1Score, Precision, Recall
 
-sys.path.append(up(os.path.abspath(__file__)))
-sys.path.append(up(up(os.path.abspath(__file__))))
-
 
 class Metrics:
     def __init__(self, config: EasyDict) -> None:
         if config.data.num_classes != 2:
-            raise NotImplementedError(
-                f"Attention: only binary accuracy was implemented"
-            )
+            raise NotImplementedError("Attention: only binary accuracy was implemented")
 
         self.metrics = {}
         metrics_name = []

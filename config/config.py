@@ -64,17 +64,17 @@ def config_to_yaml(config: Dict, space: str = "") -> str:
     intent = " " * 4
     config_str = []
     for key, value in config.items():
-        if type(value) == EasyDict:
+        if isinstance(value, EasyDict):
             if len(space) == 0:
                 config_str.append("")
                 config_str.append(space + "# " + key + " options")
             config_str.append(space + key + ":")
             config_str += config_to_yaml(value, space=space + intent)
-        elif type(value) == str:
+        elif isinstance(value, str):
             config_str.append(space + key + ": '" + str(value) + "'")
         elif value is None:
             config_str.append(space + key + ": null")
-        elif type(value) == bool:
+        elif isinstance(value, bool):
             config_str.append(space + key + ": " + str(value).lower())
         else:
             config_str.append(space + key + ": " + str(value))

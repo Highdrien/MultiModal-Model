@@ -5,9 +5,6 @@ from icecream import ic
 from config.config import load_config, find_config, train_logger
 from src.train import train
 from src.test import test
-from utils import utils
-
-import os
 
 
 def main(options: dict) -> None:
@@ -24,7 +21,7 @@ def main(options: dict) -> None:
 
         if options["path"] is None:
             raise ValueError(
-                f"you must specify the path of the experiment that you want to test"
+                "you must specify the path of the experiment that you want to test"
             )
 
         config = load_config(find_config(experiment_path=options["path"]))
