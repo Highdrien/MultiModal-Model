@@ -1,5 +1,8 @@
 # Projet SAM
 
+![Flake8 Lint](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake8.yml/badge.svg)
+
+
 Our project focuses on multimodal approaches for predicting turn-taking changes in natural conversations. The goals of this project enable us to introduce various concepts of textual, visual, and auditory modality, as well as to compare and explore different multimodal processing models and their fusion.
 
 - [Projet SAM](#projet-sam)
