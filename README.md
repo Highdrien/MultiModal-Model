@@ -2,7 +2,7 @@
 
 ![PythonVersion](https://img.shields.io/badge/python-3.10-informational)
 ![PytorchVersion](https://img.shields.io/badge/Pytorch-2.0-blue)
-[![Flake8](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake8.yml/badge.svg)](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake.yaml)
+[![Flake8](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake8.yaml/badge.svg)](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake.yaml)
 
 [![Torch_logo](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
 
