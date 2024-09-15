@@ -25,7 +25,7 @@ def test(config: EasyDict, logging_path: str) -> None:
     ic(device)
 
     # Get data
-    test_generator = create_dataloader(config=config, mode='test')
+    test_generator = create_dataloader(config=config, mode="test")
     n_test = len(test_generator)
     ic(n_test)
 
@@ -36,11 +36,11 @@ def test(config: EasyDict, logging_path: str) -> None:
     model = model.to(device)
     ic(model)
     ic(model.get_number_parameters())
-    
+
     # Loss
     weight = torch.tensor([1, 3.9], device=device)
     ic(weight)
-    criterion = torch.nn.CrossEntropyLoss(reduction='mean', weight=weight)
+    criterion = torch.nn.CrossEntropyLoss(reduction="mean", weight=weight)
 
     # Get Metrics
     metrics = Metrics(config=config)
@@ -60,7 +60,7 @@ def test(config: EasyDict, logging_path: str) -> None:
             utils.dict_to_device(data, device)
             y_true = y_true.to(device)
             y_pred = utils.forward(model=model, data=data, task=config.task)
-                
+
             loss = criterion(y_pred, y_true)
 
             test_metrics[0] += loss.item()
@@ -69,7 +69,6 @@ def test(config: EasyDict, logging_path: str) -> None:
             current_loss = test_metrics[0] / (i + 1)
             test_range.set_description(f"TEST: loss: {current_loss:.4f}")
             test_range.refresh()
-        
 
     ###################################################################
     # Save Scores in logs                                             #
@@ -77,7 +76,9 @@ def test(config: EasyDict, logging_path: str) -> None:
     test_metrics = test_metrics / n_test
 
     print(metrics.table(test_metrics[1:]))
-    
-    test_logger(path=logging_path,
-                metrics=[config.learning.loss] + metrics.metrics_name,
-                values=test_metrics)
+
+    test_logger(
+        path=logging_path,
+        metrics=[config.learning.loss] + metrics.metrics_name,
+        values=test_metrics,
+    )

@@ -1,5 +1,11 @@
 # Projet SAM
 
+![PythonVersion](https://img.shields.io/badge/python-3.10-informational)
+![PytorchVersion](https://img.shields.io/badge/Pytorch-2.0-blue)
+[![Flake8](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake8.yml/badge.svg)](https://github.com/Highdrien/MultiModal-Model/actions/workflows/flake.yaml)
+
+[![Torch_logo](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
+
 Our project focuses on multimodal approaches for predicting turn-taking changes in natural conversations. The goals of this project enable us to introduce various concepts of textual, visual, and auditory modality, as well as to compare and explore different multimodal processing models and their fusion.
 
 - [Projet SAM](#projet-sam)
