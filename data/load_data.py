@@ -1,13 +1,3 @@
-"""
-Download examples:
-
-Whole archive:
-curl 'https://amubox.univ-amu.fr/s/gkfA7rZCWGQFqif/download' -H 'Connection: keep-alive' -H 'Accept-Encoding: gzip, deflate, br' --output archive.zip
-
-Specific files with path:
-curl 'https://amubox.univ-amu.fr/s/gkfA7rZCWGQFqif/download?path=%2Fvideo%2F&files=openface.zip' -H 'Connection: keep-alive' -H 'Accept-Encoding: gzip, deflate, br' --output video/openface.zip
-"""
-
 import pandas as pd
 import os
 from glob import glob

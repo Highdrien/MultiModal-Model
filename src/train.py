@@ -21,10 +21,25 @@ from utils import utils
 from config.config import train_logger, train_step_logger
 
 
-# LABEL_DISTRIBUTION = [0.8051, 0.1949]
-
-
 def train(config: EasyDict) -> None:
+    """
+    Train a machine learning model based on the provided configuration.
+    The function performs the following steps:
+    1. Determines the device (CPU/GPU) to use for training.
+    2. Loads the training and validation data.
+    3. Initializes the model and moves it to the specified device.
+    4. Sets up the loss function, optimizer, and learning rate scheduler.
+    5. Initializes metrics for evaluation.
+    6. Optionally sets up logging for the experiment.
+    7. Iteratively trains the model for a specified number of epochs.
+    8. Validates the model after each epoch.
+    9. Logs training and validation metrics.
+    10. Saves the model if it achieves a new best validation loss.
+    11. Optionally saves learning curves after training is complete.
+
+    Args:
+        config (EasyDict): Configuration dictionary containing training parameters.
+    """
 
     # Use gpu or cpu
     device = utils.get_device(device_config=config.learning.device)

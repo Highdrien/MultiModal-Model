@@ -23,7 +23,7 @@ class BertClassifier(BaseModel):
     ) -> None:
         super(BertClassifier, self).__init__(hidden_size, last_layer, num_classes)
 
-        self.bert = BertModel.from_pretrained(
+        self.bert: BertModel = BertModel.from_pretrained(
             pretrained_model_name, output_hidden_states=True
         )
 
@@ -36,12 +36,16 @@ class BertClassifier(BaseModel):
         self.last_linear = nn.Linear(in_features=hidden_size, out_features=num_classes)
         self.relu = nn.ReLU()
 
-        # print(next(self.fc.parameters()))
-
     def forward(self, x: Tensor, attention_mask: Any = None) -> Tensor:
         """
-        x shape: (B, sequence_size),                dtype: torch.int64
-        output_shape: (B, C) or (B, hidden_size)    dtype: torch.float32
+        Forward pass for the BERT model.
+        Args:
+            x (Tensor): Input tensor of shape (B, sequence_size) with dtype torch.int64.
+            attention_mask (Any, optional): Attention mask to avoid performing attention
+                on padding token indices. Default is None.
+
+        Returns:
+            Tensor: Output tensor of shape (B, C) or (B, hidden_size) with dtype torch.float32.
         """
         outputs = self.bert(x, attention_mask=attention_mask)
         x = outputs.last_hidden_state[:, 0, :]
@@ -65,12 +69,5 @@ if __name__ == "__main__":
 
     x = torch.randint(0, 10, (64, 20))
     print(x.shape)
-    y = model(x)
+    y: Tensor = model(x)
     print(y.shape)
-
-    # torch.save(state_dict, 'textmodel_weigth.pt')
-
-    # state_dict = torch.load('textmodel_weigth.pt')
-    # ic(state_dict)
-
-    # model.load_state_dict(state_dict, strict=False)

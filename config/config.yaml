@@ -1,7 +1,7 @@
-name: experiment
-task: multi          # choose btw text, audio, video or multi
-save_experiment: true
-logs: logs
+name: experiment      # experiment name
+task: multi           # choose btw text, audio, video or multi
+save_experiment: true # save experiment
+logs: logs            # logs path
 
 load:                 # data to use (only for multi)
   text: [true, logs/text_5]
@@ -33,18 +33,18 @@ model:
     freeze_basemodel: true
   
 learning:
-  learning_rate: 0.001
-  batch_size: 128
-  epochs: 2
-  device: cuda
+  learning_rate: 0.001        # learning rate
+  batch_size: 128             # batch size
+  epochs: 2                   # number of epochs
+  device: cuda                # choose between cuda or cpu
   milesstone: [5, 15]         # gradient decay at epoch 5 and 15
   gamma: 0.1                  # learning rate will be multiplicate by 0.1 at epochs 5 and 15
-  loss: crossentropy
-  save_learning_curves: false
+  loss: crossentropy          # loss function
+  save_learning_curves: false # save learning curves
   
 metrics:
-  acc: true
-  precision: true
-  recall: true
-  f1: true
+  acc: true         # accuracy
+  precision: true   # precision
+  recall: true      # recall
+  f1: true          # f1 score
 

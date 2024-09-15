@@ -11,7 +11,16 @@ def print_loss_and_metrics(
     train_metrics: List[float],
     val_metrics: List[float],
 ) -> None:
-    """print loss and metrics for train and validation"""
+    """
+    Print loss and metrics for training and validation.
+
+    Args:
+        train_loss (float): The loss value for the training set.
+        val_loss (float): The loss value for the validation set.
+        metrics_name (List[str]): A list of metric names.
+        train_metrics (List[float]): A list of metric values for the training set.
+        val_metrics (List[float]): A list of metric values for the validation set.
+    """
     print(f"{train_loss = }")
     print(f"{val_loss = }")
     for i in range(len(metrics_name)):
@@ -21,6 +30,15 @@ def print_loss_and_metrics(
 
 
 def save_learning_curves(path: str) -> None:
+    """
+    Generates and saves learning curve plots for training and validation metrics.
+    The function reads the results from the specified file path, extracts the epochs,
+    training metrics, and validation metrics, and then plots these metrics against
+    the epochs. Each plot is saved as a PNG file in the same directory as the results file.
+
+    Args:
+        path (str): The file path to the results file containing the metrics.
+    """
     result, names = get_result(path)
 
     epochs = result[:, 0]
@@ -39,6 +57,17 @@ def save_learning_curves(path: str) -> None:
 
 
 def get_result(path: str) -> Tuple[List[float], List[str]]:
+    """
+    Reads a CSV file containing training logs and returns the results and column names.
+
+    Args:
+        path (str): The directory path where the 'train_log.csv' file is located.
+
+    Returns:
+        Tuple[List[float], List[str]]: A tuple containing:
+            - A list of lists with the training log values converted to floats.
+            - A list of column names from the CSV file.
+    """
     with open(os.path.join(path, "train_log.csv"), "r") as f:
         names = f.readline()[:-1].split(",")
         result = []
@@ -52,10 +81,4 @@ def get_result(path: str) -> Tuple[List[float], List[str]]:
 
 if __name__ == "__main__":
     logs_path = "logs"
-    # experiments_path = list(map(lambda folder: os.path.join(logs_path, folder), os.listdir(logs_path)))
-    # print(experiments_path)
-    # for experiment_path in experiments_path:
-    #     if 'likelihood' not in experiment_path:
-    #         save_learning_curves(path=experiment_path)
-
     save_learning_curves(path=os.path.join(logs_path, "audio_1"))

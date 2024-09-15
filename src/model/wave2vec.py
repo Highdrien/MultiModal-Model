@@ -31,7 +31,8 @@ class Wav2Vec2Classifier(BaseModel):
 
         if audio_length not in audio_length_2_hidden_size.keys():
             raise ValueError(
-                f"audio_length must be in {audio_length_2_hidden_size.keys()} but found {audio_length}."
+                f"audio_length must be in {audio_length_2_hidden_size.keys()} but "
+                f"found {audio_length}."
             )
 
         self.fc = torch.nn.Linear(
