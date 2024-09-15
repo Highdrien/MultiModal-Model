@@ -24,19 +24,21 @@ class MultimodalClassifier(Model):
         """Multimodal Model Classifier
         pass data like {'text': tensor, ...} in basemodel, then concatenate them
         and pass in 2 dense layers
-        ## Arguments
-        basemodel: dict[str, BaseModel]
-            exemple: {'text': BertClassifier, 'audio': Wav2Vec2Classifier, 'video': LSTMClassifier}
-            if the model take text, audi and video
 
-        last_hidden_size: int
-            output size of the second last layers (and the input size of the last one)
+        Args:
+            basemodel (dict[str, BaseModel]):
+                exemple: {'text': BertClassifier, 'audio': Wav2Vec2Classifier,
+                    'video': LSTMClassifier}
+                if the model take text, audi and video
 
-        freeze_basemodel: bool:
-            freeze or not the parameter of baseline model
+            last_hidden_size (int):
+                output size of the second last layers (and the input size of the last one)
 
-        num_classes: int
-            simply the number of classes
+            freeze_basemodel (bool):
+                freeze or not the parameter of baseline model
+
+            num_classes (int):
+                simply the number of classes
         """
         super().__init__()
 
@@ -44,7 +46,8 @@ class MultimodalClassifier(Model):
 
         if not all(element in ["text", "video", "audio"] for element in self.keys):
             raise ValueError(
-                f"all keys of basemodel must be text, audio or video. But the keys are {list(basemodel.keys())}"
+                "all keys of basemodel must be text, audio or video. But the keys are ",
+                f"{list(basemodel.keys())}",
             )
 
         self.basemodel = basemodel
@@ -66,15 +69,16 @@ class MultimodalClassifier(Model):
         self.relu = nn.ReLU()
 
     def forward(self, data: dict[str, Tensor]) -> Tensor:
-        """go through the model
-
-        input       shape                          dtype
-        text    (B, sequence_size)              torch.int64
-        audio   (B, audio_length)               torch.float32
-        frames  (B, num_frames, num_features)   torch.float32
-
-        ouput       shape                          dtype
-        logits  (B, num_classes)                torch.float32
+        """
+        Forward pass through the multimodal model.
+        Args:
+            data (dict[str, Tensor]): A dictionary containing the input data with the
+                following keys:
+                - `text`: Tensor of shape (B, sequence_size) and dtype torch.int64
+                - `audio`: Tensor of shape (B, audio_length) and dtype torch.float32
+                - `frames`: Tensor of shape (B, num_frames, num_features) and dtype torch.float32
+        Returns:
+            Tensor: The output logits of shape (B, num_classes) and dtype torch.float32.
         """
         baseline_output = []
         for key in self.keys:
@@ -89,6 +93,22 @@ class MultimodalClassifier(Model):
     def named_parameters(
         self, prefix: str = "", recurse: bool = True, remove_duplicate: bool = True
     ) -> Iterator[Tuple[str, Parameter]]:
+        """
+        Returns an iterator over module parameters, yielding both the name of the parameter
+        as well as the parameter itself.
+
+        Args:
+            prefix (str, optional): A prefix to prepend to all parameter names. Defaults to "".
+            recurse (bool, optional): If True, then yields parameters of this module and all
+                                      submodules. Defaults to True.
+            remove_duplicate (bool, optional): If True, removes duplicate parameters.
+                Defaults to True.
+
+        Yields:
+            Iterator[Tuple[str, Parameter]]:
+                An iterator over tuples containing the name of the parameter and
+                the parameter itself.
+        """
         if recurse:
             for model in self.basemodel.values():
                 yield from model.named_parameters(prefix, recurse, remove_duplicate)
@@ -98,17 +118,45 @@ class MultimodalClassifier(Model):
         # yield from self.fc2.named_parameters(prefix, recurse, remove_duplicate)
 
     def to(self, device: torch.device):
+        """
+        Moves the model and its sub-models to the specified device.
+
+        Args:
+            device (torch.device): The device to move the model to (e.g., 'cpu' or 'cuda').
+
+        Returns:
+            self: The instance of the model after being moved to the specified device.
+        """
         super().to(device)
         for model in self.basemodel.values():
             model = model.to(device)
         return self
 
     def eval(self) -> None:
+        """
+        Evaluates each base model in the multimodal model.
+
+        This method sets each base model to evaluation mode, which typically affects
+        layers like dropout and batch normalization, ensuring that they behave
+        appropriately during inference.
+
+        Returns:
+            self: The instance of the multimodal model with all base models set to evaluation mode.
+        """
         for model in self.basemodel.values():
             model = model.eval()
         return self
 
     def train(self) -> None:
+        """
+        Trains each base model in the `basemodel` dictionary.
+
+        This method iterates over all models stored in the `basemodel` dictionary,
+        calls their `train` method, and updates the model in the dictionary.
+
+        Returns:
+            self: The instance of the class after training the models.
+        """
         for model in self.basemodel.values():
             model = model.train()
         return self

@@ -53,25 +53,26 @@ class DataGenerator(Dataset):
 
     def __getitem__(self, index: int) -> Tuple[dict[str, Tensor], Tensor]:
         """
-        ----
-        ARGUMENTS
-        index: int
-            number of batch that will be load
-        -----
-        OUTPUT:
-        data: dict[str, Tensor]
-            dictionary of data witch containt keys like text, audio or/and video
-            and the torch tensor for the value of the corresponding key
-            find the shape below
-        label: Tensor
-            label of the results
+        Retrieves a batch of data and its corresponding label by index.
 
-        -----
-        SHAPE AFTER BATCH
-        text  shape:    (batch_size, sequence size)
-        audio shape:    (batch_size, audio_length, 2)
-        video shape:    (batch_size, num_frames, num_features, 2)
-        label shape:    (batch_size, num_classes)
+        Args:
+            index (int): The index of the batch to load.
+
+        Returns:
+            Tuple[dict[str, Tensor], Tensor]: A tuple containing:
+                - data (dict[str, Tensor]):
+                    A dictionary with keys such as `text`, `audio`, and/or `video`,
+                    each containing a corresponding torch tensor.
+                    Shape after batches of the tensors are as follows:
+                        text  shape:    (batch_size, sequence size)
+                        audio shape:    (batch_size, audio_length, 2)
+                        video shape:    (batch_size, num_frames, num_features, 2)
+                        label shape:    (batch_size, num_classes)
+                - label (Tensor): A one-hot encoded tensor representing the label of the batch.
+
+        Raises:
+            ValueError: If the text data has fewer elements than `sequence_size`.
+            ValueError: If the audio data shape does not match the expected shape `(audio_size, 2)`
         """
         line = self.df.loc[index]
         label = torch.tensor(int(line["label"]))
@@ -86,9 +87,11 @@ class DataGenerator(Dataset):
 
             if len(text) < self.sequence_size:
                 raise ValueError(
-                    f"text must be have more than {self.sequence_size} elements, but found only {len(text)} elements.\n"
-                    f"the file is: {line['text_filepath']} in the line (ipu)={line['ipu_id']}. Number line to load is {self.num_line_to_load_for_text}.\n"
-                    f"{self.mode = }, {index = }"
+                    f"text must be have more than {self.sequence_size} elements, ",
+                    f"but found only {len(text)} elements.\n"
+                    f"the file is: {line['text_filepath']} in the line (ipu)={line['ipu_id']}. ",
+                    f"Number line to load is {self.num_line_to_load_for_text}.\n"
+                    f"{self.mode = }, {index = }",
                 )
 
             text = torch.tensor(text)
@@ -101,7 +104,8 @@ class DataGenerator(Dataset):
             if audio.shape != (self.audio_size, 2):
                 raise ValueError(
                     f"audio shape expected {(self.audio_size, 2)} but found {audio.shape}.\n"
-                    f'Change the audio size or remove the item {line["item"]} in item_{self.mode}.csv'
+                    f"Change the audio size or remove the item {line['item']} ",
+                    f"in item_{self.mode}.csv",
                 )
 
         if self.load["video"]:
@@ -115,15 +119,18 @@ class DataGenerator(Dataset):
 
 
 def create_dataloader(mode: str, config: EasyDict) -> DataLoader:
-    """Create a dataloader
-    -----
-    ARGUMENTS
-    mode: str
-        select mode. Can be train, val or test
-    config: EasyDict
-    -----
-    OUTPUTS:
-    dataloader: DataLoader
+    """
+    Create a dataloader.
+
+    Args:
+        mode (str): The mode of the dataloader. Must be 'train', 'val', or 'test'.
+        config (EasyDict): The configuration dictionary.
+
+    Returns
+        DataLoader: A DataLoader object configured based on the provided mode and config.
+
+    Raises:
+        ValueError: If the mode is not 'train', 'val', or 'test'.
     """
     if mode not in ["train", "val", "test"]:
         raise ValueError(f"mode must be train, val or test but is '{mode}'")

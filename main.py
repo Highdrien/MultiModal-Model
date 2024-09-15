@@ -8,6 +8,20 @@ from src.test import test
 
 
 def main(options: dict) -> None:
+    """
+    Main function to handle different modes of operation: train, test, latefusion, and baseline.
+
+    Args:
+        options (dict): A dictionary containing configuration options. Expected keys are:
+            - "config_path" (str): Path to the configuration file.
+            - "mode" (str): Mode of operation. Can be "train", "test", "latefusion", or "baseline".
+            - "task" (str, optional): Specific task to be set in the configuration.
+                Used in "train" mode.
+            - "path" (str, optional): Path of the experiment to be tested. Used in "test" mode.
+
+    Raises:
+        ValueError: If "path" is not specified in "test" mode.
+    """
 
     config = load_config(options["config_path"])
 

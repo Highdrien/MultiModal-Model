@@ -13,7 +13,26 @@ from model import bert, lstm, wave2vec, multimodal, likelihood
 
 
 def get_model(config: EasyDict) -> Model:
-    """Get the model according the configuration (config)"""
+    """
+    Get the model according to the configuration (config).
+    The function supports the following tasks:
+    - "text": Returns a BertClassifier.
+    - "audio": Returns a Wav2Vec2Classifier.
+    - "video": Returns an LSTMClassifier.
+    - "multi": Returns a multimodal model which can be either a Likelihood model
+        or a MultimodalClassifier.
+    For the "multi" task, the function can load pre-trained models for text, audio,
+        and video tasks if specified in the config.
+
+    Args:
+        config (EasyDict): Configuration dictionary containing model and task specifications.
+
+    Returns:
+        Model: An instance of the specified model.
+
+    Raises:
+        NotImplementedError: If the task specified in config is not implemented.
+    """
     implemented = ["text", "audio", "video", "multi"]
     if config.task not in implemented:
         raise NotImplementedError(

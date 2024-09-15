@@ -21,7 +21,8 @@ class Likelihood(Model):
 
         if not all(element in ["text", "video", "audio"] for element in self.keys):
             raise ValueError(
-                f"all keys of basemodel must be text, audio or video. But the keys are {list(basemodel.keys())}"
+                "all keys of basemodel must be text, audio or video. But the keys ",
+                f"are {list(basemodel.keys())}",
             )
 
         self.basemodel = basemodel
